@@ -6,12 +6,12 @@ export default function Home({ artist, artworks }) {
   return (
     <Layout>
       {/* Hero Section with Artist Photo */}
-      <section className="px-6 lg:px-10 py-20">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-16">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-8 sm:gap-12 lg:gap-16">
             {/* Artist Photo */}
             <div className="flex-shrink-0">
-              <div className="w-48 lg:w-56 aspect-[3/4] overflow-hidden bg-base-200 rounded-2xl">
+              <div className="w-40 sm:w-48 lg:w-56 aspect-[3/4] overflow-hidden bg-base-200 rounded-2xl">
                 <img
                   src={`/images/${artist.photo}`}
                   alt={artist.name}
@@ -22,10 +22,10 @@ export default function Home({ artist, artworks }) {
 
             {/* Hero Text */}
             <div className="flex-1">
-              <p className="text-sm tracking-[0.3em] uppercase text-base-content/40 mb-4">
+              <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">
                 Artist & Educator
               </p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 sm:mb-6">
                 {artist.name}
               </h1>
               <p className="text-base text-base-content/60 max-w-xl leading-relaxed mb-6">
@@ -58,12 +58,12 @@ export default function Home({ artist, artworks }) {
       </section>
 
       {/* Selected Works Grid */}
-      <section className="px-6 lg:px-10 py-20 bg-base-200/30">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-base-200/30">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
+          <div className="flex items-end justify-between mb-8 sm:mb-12">
             <div>
               <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">Portfolio</p>
-              <h2 className="text-3xl md:text-4xl font-light">Selected Works</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light">Selected Works</h2>
             </div>
             <Link
               href="/gallery"
@@ -109,12 +109,12 @@ export default function Home({ artist, artworks }) {
       </section>
 
       {/* About Section */}
-      <section className="px-6 lg:px-10 py-20">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24">
             <div>
               <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">About</p>
-              <h2 className="text-3xl md:text-4xl font-light mb-8">The Artist</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-6 sm:mb-8">The Artist</h2>
               <div className="space-y-6 text-base-content/70 leading-relaxed">
                 <p>{artist.bio}</p>
                 <p>{artist.bio2}</p>
@@ -141,11 +141,11 @@ export default function Home({ artist, artworks }) {
       </section>
 
       {/* Arena Negra Section */}
-      <section className="px-6 lg:px-10 py-20 bg-base-200/30">
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-base-200/30">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl">
-            <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">Gallery & Art School</p>
-            <h2 className="text-3xl md:text-4xl font-light mb-8">Arena Negra</h2>
+            <p className="text-xs sm:text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">Gallery & Art School</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-6 sm:mb-8">Arena Negra</h2>
             <p className="text-base-content/70 leading-relaxed mb-8">
               {artist.gallery_info}
             </p>
@@ -165,9 +165,9 @@ export default function Home({ artist, artworks }) {
       </section>
 
       {/* Contact CTA */}
-      <section className="px-6 lg:px-10 py-20 text-center">
-        <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-4">Get in touch</p>
-        <h2 className="text-3xl md:text-4xl font-light mb-8">Interested in a piece?</h2>
+      <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 text-center">
+        <p className="text-xs sm:text-sm tracking-[0.2em] uppercase text-base-content/40 mb-3 sm:mb-4">Get in touch</p>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-6 sm:mb-8">Interested in a piece?</h2>
         <a
           href={artist.instagram_artist}
           target="_blank"

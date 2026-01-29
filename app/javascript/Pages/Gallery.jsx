@@ -7,15 +7,15 @@ export default function Gallery({ artworks }) {
   return (
     <Layout>
       {/* Header */}
-      <section className="px-6 lg:px-10 py-24 text-center">
-        <p className="text-sm tracking-[0.3em] uppercase text-base-content/40 mb-4">Portfolio</p>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-light">Gallery</h1>
+      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24 text-center">
+        <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Portfolio</p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light">Gallery</h1>
       </section>
 
       {/* Gallery Grid */}
-      <section className="px-6 lg:px-10 pb-24">
+      <section className="px-4 sm:px-6 lg:px-10 pb-16 sm:pb-20 lg:pb-24">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {artworks.map((artwork) => (
               <div
                 key={artwork.id}
@@ -37,8 +37,8 @@ export default function Gallery({ artworks }) {
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
                 </div>
-                <div className="mt-4 space-y-1">
-                  <h3 className="font-medium group-hover:opacity-70 transition-opacity">{artwork.title}</h3>
+                <div className="mt-3 sm:mt-4 space-y-1">
+                  <h3 className="text-sm sm:text-base font-medium group-hover:opacity-70 transition-opacity">{artwork.title}</h3>
                   <p className="text-sm text-base-content/50">{artwork.year}</p>
                 </div>
               </div>
