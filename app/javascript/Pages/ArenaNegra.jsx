@@ -67,11 +67,11 @@ export default function ArenaNegra({ videos, gallery_info, instagram_gallery }) 
               </button>
 
               {/* Video */}
-              <div className="bg-base-200 rounded-xl overflow-hidden aspect-video">
+              <div className="rounded-xl overflow-hidden">
                 <video
                   key={currentVideo.id}
                   src={`/videos/${currentVideo.filename}`}
-                  className="w-full h-full object-contain"
+                  className="w-full"
                   controls
                   playsInline
                 />
