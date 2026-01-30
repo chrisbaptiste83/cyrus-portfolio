@@ -44,7 +44,7 @@ export default function ArenaNegra({ videos, gallery_info, instagram_gallery }) 
       {/* Video Player with Navigation */}
       {currentVideo && videos.length > 0 && (
         <section className="px-4 sm:px-6 lg:px-10 pb-16 sm:pb-20 lg:pb-24">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-xl mx-auto">
             <div className="relative">
               {/* Left Arrow */}
               <button
