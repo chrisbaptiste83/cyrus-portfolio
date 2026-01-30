@@ -5,10 +5,12 @@ import { createInertiaApp } from '@inertiajs/react'
 // Explicitly import pages since esbuild doesn't support import.meta.glob
 import Home from './Pages/Home'
 import Gallery from './Pages/Gallery'
+import ArenaNegra from './Pages/ArenaNegra'
 
 const pages = {
   Home,
   Gallery,
+  ArenaNegra,
 }
 
 createInertiaApp({

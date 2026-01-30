@@ -21,6 +21,14 @@ class PagesController < ApplicationController
     }
   end
 
+  def arena_negra
+    render inertia: "ArenaNegra", props: {
+      videos: videos_data,
+      gallery_info: "Arena Negra es un proyecto que, en 2024 nació del deseo de crear un espacio independiente para el arte en el centro de Monterrey, dentro del Semillero Purísima. Funciona como galería y escuela de arte, donde promuevo el trabajo de artistas emergentes, produzco obra propia y comparto mi experiencia dando clases a distintas generaciones. Es un proyecto en construcción constante, en el que he ido aprendiendo sobre la marcha, enfrentando los retos de sostener un espacio cultural mientras exploro nuevas formas de conectar con la comunidad artística y con el público.",
+      instagram_gallery: "https://www.instagram.com/arenanegragaleria"
+    }
+  end
+
   private
 
   def artworks_data
@@ -39,6 +47,15 @@ class PagesController < ApplicationController
       { id: 12, title: "Infestation", year: "2015", medium: "Óleo sobre tela", dimensions: "60 x 80 cm", image: "image13.jpeg" },
       { id: 13, title: "Effervescent", year: "2015", medium: "Óleo sobre tela", dimensions: "90 x 70 cm", image: "image14.jpeg" },
       { id: 14, title: "Mafriend", year: "2015", medium: "Óleo sobre tela", dimensions: "90 x 70 cm", image: "image15.jpeg" }
+    ]
+  end
+
+  def videos_data
+    [
+      { id: 1, filename: "8cac1188-17be-4e9e-b6a3-d6c8d4aa3e4a.MP4" },
+      { id: 2, filename: "e271b166-6141-48b2-8f5c-2e3cda478bb8.MP4" },
+      { id: 3, filename: "ebb0f7b1-00e0-43f3-ac0d-738526af8eec.MP4" },
+      { id: 4, filename: "f3374a70-99e0-455c-89fb-fee8ac9dc9e8.MP4" }
     ]
   end
 end

@@ -28,6 +28,12 @@ export default function Layout({ children }) {
               >
                 Gallery
               </Link>
+              <Link
+                href="/arena-negra"
+                className="text-sm tracking-wide hover:opacity-70 transition-opacity"
+              >
+                Arena Negra
+              </Link>
               <a
                 href="https://www.instagram.com/cyrusbaptiste.artist"
                 target="_blank"
@@ -73,6 +79,13 @@ export default function Layout({ children }) {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Gallery
+                </Link>
+                <Link
+                  href="/arena-negra"
+                  className="text-sm tracking-wide hover:opacity-70 transition-opacity"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Arena Negra
                 </Link>
                 <a
                   href="https://www.instagram.com/cyrusbaptiste.artist"
