@@ -26,6 +26,7 @@ class PagesController < ApplicationController
   def arena_negra
     render inertia: "ArenaNegra", props: {
       videos: videos_data,
+      artworks: artworks_data,
       gallery_info: "Arena Negra es un proyecto que, en 2024 nació del deseo de crear un espacio independiente para el arte en el centro de Monterrey, dentro del Semillero Purísima. Funciona como galería y escuela de arte, donde promuevo el trabajo de artistas emergentes, produzco obra propia y comparto mi experiencia dando clases a distintas generaciones. Es un proyecto en construcción constante, en el que he ido aprendiendo sobre la marcha, enfrentando los retos de sostener un espacio cultural mientras exploro nuevas formas de conectar con la comunidad artística y con el público.",
       instagram_gallery: "https://www.instagram.com/arenanegragaleria"
     }
