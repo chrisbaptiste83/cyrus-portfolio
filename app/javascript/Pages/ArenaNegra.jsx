@@ -56,12 +56,12 @@ export default function ArenaNegra({ videos, artworks, gallery_info, instagram_g
             Un espacio independiente para el arte en el corazón de Monterrey
           </p>
 
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
             <a
               href={instagram_gallery}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-base-content text-base-100 hover:bg-base-content/90 transition-colors"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-base-content text-base-100 hover:bg-base-content/90 transition-colors text-sm sm:text-base"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
@@ -166,21 +166,21 @@ export default function ArenaNegra({ videos, artworks, gallery_info, instagram_g
               {/* Main Video Player */}
               <div className="max-w-4xl mx-auto">
                 <div className="relative group">
-                  {/* Navigation Arrows */}
+                  {/* Navigation Arrows - Always visible on mobile, hover on desktop */}
                   <button
                     onClick={goToPrevious}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+                    className="absolute -left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
                     </svg>
                   </button>
 
                   <button
                     onClick={goToNext}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+                    className="absolute -right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
@@ -197,15 +197,7 @@ export default function ArenaNegra({ videos, artworks, gallery_info, instagram_g
                   </div>
                 </div>
 
-                {/* Video Title */}
-                <div className="text-center mt-6">
-                  <p className="text-lg font-light">{currentVideo.title}</p>
-                  <p className="text-sm text-base-content/50 mt-1">
-                    {currentIndex + 1} de {videos.length}
-                  </p>
-                </div>
-
-                {/* Video Thumbnails */}
+                {/* Video Indicators */}
                 {videos.length > 1 && (
                   <div className="flex justify-center gap-3 mt-8">
                     {videos.map((video, index) => (
@@ -245,23 +237,23 @@ export default function ArenaNegra({ videos, artworks, gallery_info, instagram_g
         </div>
 
         {/* Scrolling Artwork Strip */}
-        <div className="relative">
-          <div className="flex gap-6 animate-marquee hover:pause">
+        <div className="relative px-4 sm:px-0">
+          <div className="flex gap-4 sm:gap-6 animate-marquee hover:pause">
             {[...artworks, ...artworks].map((artwork, index) => (
               <Link
                 key={`${artwork.id}-${index}`}
                 href="/gallery"
                 className="flex-shrink-0 group"
               >
-                <div className="w-64 sm:w-72 aspect-[4/5] overflow-hidden rounded-xl bg-base-200">
+                <div className="w-48 sm:w-64 md:w-72 aspect-[4/5] overflow-hidden rounded-lg sm:rounded-xl bg-base-200">
                   <img
                     src={artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                <div className="mt-3 px-1">
-                  <p className="font-medium text-sm group-hover:text-base-content/70 transition-colors">{artwork.title}</p>
+                <div className="mt-2 sm:mt-3 px-1">
+                  <p className="font-medium text-xs sm:text-sm group-hover:text-base-content/70 transition-colors truncate">{artwork.title}</p>
                   <p className="text-xs text-base-content/50">{artwork.year}</p>
                 </div>
               </Link>
