@@ -63,4 +63,4 @@ end
 # Admin interface
 gem "devise"
 gem "activeadmin"
-gem "sassc-rails"
+gem "dartsass-rails"
