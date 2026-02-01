@@ -159,7 +159,6 @@ export default function ArenaNegra({ videos, artworks, gallery_info, instagram_g
             <div className="max-w-7xl mx-auto">
               {/* Section Header */}
               <div className="text-center mb-12">
-                <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-3">Multimedia</p>
                 <h2 className="text-3xl sm:text-4xl font-light">Videos del Estudio</h2>
               </div>
 
