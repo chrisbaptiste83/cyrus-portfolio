@@ -1,0 +1,28 @@
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field">
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "admin@example.com" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password, autocomplete: "current-password", placeholder: "Enter your password" %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="remember-field">
+      <%= f.check_box :remember_me %>
+      <%= f.label :remember_me, "Remember me" %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Sign In" %>
+  </div>
+<% end %>
+
+<div class="links">
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+    <%= link_to "Forgot your password?", new_password_path(resource_name) %>
+  <% end %>
+</div>

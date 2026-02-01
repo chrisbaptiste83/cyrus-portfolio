@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html data-theme="black" class="h-full">
+<html data-theme="black" class="h-full" lang="es">
   <head>
-    <title><%= content_for(:title) || "Cyrus Portfolio" %></title>
+    <title><%= content_for(:title) || "Cyrus Baptiste - Artist & Educator" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<%= content_for(:description) || 'Cyrus Baptiste - Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms. View gallery and Arena Negra art school.' %>">
+    <meta name="keywords" content="Cyrus Baptiste, artist, painter, Monterrey, Mexico, Arena Negra, gallery, art school, contemporary art, oil painting">
+    <meta name="author" content="Cyrus Baptiste">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cyrusbaptiste.com<%= request.path %>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cyrusbaptiste.com<%= request.path %>">
+    <meta property="og:title" content="<%= content_for(:title) || 'Cyrus Baptiste - Artist & Educator' %>">
+    <meta property="og:description" content="<%= content_for(:description) || 'Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms.' %>">
+    <meta property="og:image" content="https://cyrusbaptiste.com/images/image1.jpeg">
+    <meta property="og:locale" content="es_MX">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= content_for(:title) || 'Cyrus Baptiste - Artist & Educator' %>">
+    <meta name="twitter:description" content="<%= content_for(:description) || 'Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms.' %>">
+    <meta name="twitter:image" content="https://cyrusbaptiste.com/images/image1.jpeg">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 

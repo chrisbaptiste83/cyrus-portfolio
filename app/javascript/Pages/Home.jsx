@@ -84,7 +84,7 @@ export default function Home({ artist, artworks }) {
               >
                 <div className={`aspect-square ${index === 0 || index === 5 ? 'md:aspect-auto md:h-full' : ''}`}>
                   <img
-                    src={`/images/${artwork.image}`}
+                    src={artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-90"
                     onError={(e) => {

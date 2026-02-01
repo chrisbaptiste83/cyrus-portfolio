@@ -24,7 +24,7 @@ export default function Gallery({ artworks }) {
               >
                 <div className="relative overflow-hidden bg-base-200 aspect-[4/5] rounded-xl">
                   <img
-                    src={`/images/${artwork.image}`}
+                    src={artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     onError={(e) => {
@@ -69,7 +69,7 @@ export default function Gallery({ artworks }) {
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
               <div className="bg-base-200 aspect-[4/5] flex items-center justify-center">
                 <img
-                  src={`/images/${selectedArtwork.image}`}
+                  src={selectedArtwork.image}
                   alt={selectedArtwork.title}
                   className="w-full h-full object-contain"
                   onError={(e) => {

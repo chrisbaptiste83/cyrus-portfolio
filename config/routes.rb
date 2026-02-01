@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  ActiveAdmin.routes(self)
+  devise_for :admin_users, controllers: { sessions: "admin_users/sessions" }
   root "pages#home"
   get "gallery", to: "pages#gallery"
   get "arena-negra", to: "pages#arena_negra"
