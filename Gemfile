@@ -63,4 +63,4 @@ end
 # Admin interface
 gem "devise"
 gem "activeadmin"
-gem "dartsass-rails"
+gem "sass-embedded"  # For compiling Active Admin SCSS
