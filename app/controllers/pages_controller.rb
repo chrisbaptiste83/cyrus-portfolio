@@ -27,6 +27,7 @@ class PagesController < ApplicationController
     render inertia: "ArenaNegra", props: {
       videos: videos_data,
       artworks: artworks_data,
+      gallery_media: gallery_media_data,
       gallery_info: "Arena Negra es un proyecto que, en 2024 nació del deseo de crear un espacio independiente para el arte en el centro de Monterrey, dentro del Semillero Purísima. Funciona como galería y escuela de arte, donde promuevo el trabajo de artistas emergentes, produzco obra propia y comparto mi experiencia dando clases a distintas generaciones. Es un proyecto en construcción constante, en el que he ido aprendiendo sobre la marcha, enfrentando los retos de sostener un espacio cultural mientras exploro nuevas formas de conectar con la comunidad artística y con el público.",
       instagram_gallery: "https://www.instagram.com/arenanegragaleria"
     }
@@ -55,5 +56,26 @@ class PagesController < ApplicationController
         filename: video.file.attached? ? rails_blob_path(video.file, only_path: true) : nil
       }
     end
+  end
+
+  def gallery_media_data
+    {
+      student_work: GalleryMedia.student_work.map { |m| media_to_hash(m) },
+      exhibitions: GalleryMedia.exhibition.map { |m| media_to_hash(m) },
+      events: GalleryMedia.event.map { |m| media_to_hash(m) },
+      workshops: GalleryMedia.workshop.map { |m| media_to_hash(m) }
+    }
+  end
+
+  def media_to_hash(media)
+    {
+      id: media.id,
+      title: media.title,
+      description: media.description,
+      category: media.category,
+      media_type: media.media_type,
+      credit: media.credit,
+      file_url: media.file.attached? ? rails_blob_path(media.file, only_path: true) : nil
+    }
   end
 end
