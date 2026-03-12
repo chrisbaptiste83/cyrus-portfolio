@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Layout from './Layout'
 import { Link } from '@inertiajs/react'
 
-export default function ArenaNegra({ videos, artworks, gallery_media, gallery_info, instagram_gallery }) {
+export default function ArenaNegra({ artworks, gallery_media, gallery_info, instagram_gallery }) {
   const [selectedMedia, setSelectedMedia] = useState(null)
 
   // Get featured artworks for the hero background
