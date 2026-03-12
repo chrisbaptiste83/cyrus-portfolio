@@ -3,21 +3,18 @@ import Layout from './Layout'
 import { Link } from '@inertiajs/react'
 
 export default function ArenaNegra({ videos, artworks, gallery_media, gallery_info, instagram_gallery }) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const currentVideo = videos[currentIndex] || null
-  const [activeTab, setActiveTab] = useState('student_work')
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1))
-  }
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev === videos.length - 1 ? 0 : prev + 1))
-  }
+  const [selectedMedia, setSelectedMedia] = useState(null)
 
   // Get featured artworks for the hero background
-  const featuredArtwork = artworks[0]
   const showcaseArtworks = artworks.slice(0, 6)
+
+  // Combine all gallery media into one array
+  const allMedia = [
+    ...(gallery_media?.student_work || []),
+    ...(gallery_media?.exhibitions || []),
+    ...(gallery_media?.workshops || []),
+    ...(gallery_media?.events || []),
+  ]
 
   return (
     <Layout>
@@ -153,264 +150,54 @@ export default function ArenaNegra({ videos, artworks, gallery_media, gallery_in
         </div>
       </section>
 
-      {/* Video Gallery Section */}
-      {currentVideo && videos.length > 0 && (
-        <section className="bg-base-200/50 py-16 sm:py-20 lg:py-24">
+      {/* Gallery Media Section - Beautiful Masonry Grid */}
+      {allMedia.length > 0 && (
+        <section className="bg-base-200/30 py-16 sm:py-20 lg:py-24">
           <div className="px-4 sm:px-6 lg:px-10">
             <div className="max-w-7xl mx-auto">
               {/* Section Header */}
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl font-light">Videos del Estudio</h2>
+                <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-4">Nuestra Comunidad</p>
+                <h2 className="text-3xl sm:text-4xl font-light">Galería del Estudio</h2>
               </div>
 
-              {/* Main Video Player */}
-              <div className="max-w-4xl mx-auto">
-                <div className="relative group">
-                  {/* Navigation Arrows - Always visible on mobile, hover on desktop */}
-                  <button
-                    onClick={goToPrevious}
-                    className="absolute -left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white"
+              {/* Masonry Grid */}
+              <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 sm:gap-4">
+                {allMedia.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="break-inside-avoid mb-3 sm:mb-4 group cursor-pointer"
+                    onClick={() => item.media_type === 'image' && setSelectedMedia(item)}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-
-                  <button
-                    onClick={goToNext}
-                    className="absolute -right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity hover:bg-white"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-
-                  {/* Video Container */}
-                  <div className="rounded-2xl overflow-hidden shadow-2xl bg-black">
-                    <video
-                      key={currentVideo.id}
-                      src={currentVideo.filename}
-                      className="w-full aspect-video"
-                      controls
-                      playsInline
-                    />
+                    <div className="relative overflow-hidden rounded-lg bg-base-200">
+                      {item.media_type === 'image' ? (
+                        <img
+                          src={item.file_url}
+                          alt={item.title}
+                          className="w-full transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
+                        />
+                      ) : (
+                        <video
+                          src={item.file_url}
+                          className="w-full"
+                          controls
+                          playsInline
+                        />
+                      )}
+                      {/* Hover Overlay for Images */}
+                      {item.media_type === 'image' && (
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-
-                {/* Video Indicators */}
-                {videos.length > 1 && (
-                  <div className="flex justify-center gap-3 mt-8">
-                    {videos.map((video, index) => (
-                      <button
-                        key={video.id}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`w-3 h-3 rounded-full transition-all ${
-                          index === currentIndex
-                            ? 'bg-base-content scale-100'
-                            : 'bg-base-content/30 hover:bg-base-content/50'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Gallery Media Section - Student Work, Exhibitions, etc. */}
-      {gallery_media && (
-        <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24">
-          <div className="max-w-7xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-12">
-              <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-4">Nuestra Comunidad</p>
-              <h2 className="text-3xl sm:text-4xl font-light mb-8">Galería y Talleres</h2>
-
-              {/* Tabs */}
-              <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-                {[
-                  { key: 'student_work', label: 'Trabajo de Estudiantes' },
-                  { key: 'exhibitions', label: 'Exposiciones' },
-                  { key: 'workshops', label: 'Talleres' },
-                  { key: 'events', label: 'Eventos' },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base transition-all ${
-                      activeTab === tab.key
-                        ? 'bg-base-content text-base-100'
-                        : 'bg-base-200 text-base-content/70 hover:bg-base-300'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
                 ))}
               </div>
-            </div>
-
-            {/* Content Grid */}
-            <div className="mt-12">
-              {/* Student Work - Masonry Grid */}
-              {activeTab === 'student_work' && (
-                <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6">
-                  {gallery_media.student_work?.length > 0 ? (
-                    gallery_media.student_work.map((item) => (
-                      <div key={item.id} className="break-inside-avoid mb-4 sm:mb-6 group">
-                        <div className="relative overflow-hidden rounded-xl bg-base-200">
-                          {item.media_type === 'image' ? (
-                            <img
-                              src={item.file_url}
-                              alt={item.title}
-                              className="w-full transition-transform duration-700 group-hover:scale-105"
-                            />
-                          ) : (
-                            <video
-                              src={item.file_url}
-                              className="w-full"
-                              controls
-                              playsInline
-                            />
-                          )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                            <div className="absolute bottom-4 left-4 right-4">
-                              <p className="text-white text-sm font-medium">{item.title}</p>
-                              {item.credit && (
-                                <p className="text-white/70 text-xs mt-1">Por: {item.credit}</p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        {item.description && (
-                          <p className="text-sm text-base-content/60 mt-2 px-1">{item.description}</p>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-16 text-base-content/50">
-                      <p>Próximamente - Trabajo de nuestros estudiantes</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Exhibitions - Cards Layout */}
-              {activeTab === 'exhibitions' && (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                  {gallery_media.exhibitions?.length > 0 ? (
-                    gallery_media.exhibitions.map((item) => (
-                      <div key={item.id} className="group">
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-base-200">
-                          {item.media_type === 'image' ? (
-                            <img
-                              src={item.file_url}
-                              alt={item.title}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                          ) : (
-                            <video
-                              src={item.file_url}
-                              className="w-full h-full object-cover"
-                              controls
-                              playsInline
-                            />
-                          )}
-                        </div>
-                        <div className="mt-4">
-                          <h3 className="font-medium text-lg">{item.title}</h3>
-                          {item.description && (
-                            <p className="text-sm text-base-content/60 mt-1">{item.description}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-16 text-base-content/50">
-                      <p>Próximamente - Exposiciones en Arena Negra</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Workshops - Cards with Overlay */}
-              {activeTab === 'workshops' && (
-                <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-                  {gallery_media.workshops?.length > 0 ? (
-                    gallery_media.workshops.map((item) => (
-                      <div key={item.id} className="group relative aspect-video overflow-hidden rounded-xl bg-base-200">
-                        {item.media_type === 'image' ? (
-                          <img
-                            src={item.file_url}
-                            alt={item.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <video
-                            src={item.file_url}
-                            className="w-full h-full object-cover"
-                            controls
-                            playsInline
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
-                          <div>
-                            <h3 className="text-white font-medium text-xl">{item.title}</h3>
-                            {item.description && (
-                              <p className="text-white/70 text-sm mt-2">{item.description}</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-16 text-base-content/50">
-                      <p>Próximamente - Talleres y clases de arte</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Events - Timeline Style */}
-              {activeTab === 'events' && (
-                <div className="max-w-4xl mx-auto space-y-8">
-                  {gallery_media.events?.length > 0 ? (
-                    gallery_media.events.map((item, index) => (
-                      <div key={item.id} className={`flex flex-col md:flex-row gap-6 ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-                        <div className="md:w-1/2">
-                          <div className="relative overflow-hidden rounded-xl bg-base-200">
-                            {item.media_type === 'image' ? (
-                              <img
-                                src={item.file_url}
-                                alt={item.title}
-                                className="w-full aspect-video object-cover"
-                              />
-                            ) : (
-                              <video
-                                src={item.file_url}
-                                className="w-full aspect-video object-cover"
-                                controls
-                                playsInline
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className="md:w-1/2 flex flex-col justify-center">
-                          <h3 className="font-medium text-xl">{item.title}</h3>
-                          {item.description && (
-                            <p className="text-base-content/60 mt-2">{item.description}</p>
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-16 text-base-content/50">
-                      <p>Próximamente - Eventos especiales</p>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -489,6 +276,40 @@ export default function ArenaNegra({ videos, artworks, gallery_media, gallery_in
           </div>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {selectedMedia && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setSelectedMedia(null)}
+        >
+          {/* Close Button */}
+          <button
+            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+            onClick={() => setSelectedMedia(null)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Image */}
+          <img
+            src={selectedMedia.file_url}
+            alt={selectedMedia.title}
+            className="max-w-full max-h-[90vh] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {/* Caption */}
+          {(selectedMedia.title || selectedMedia.credit) && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center text-white">
+              {selectedMedia.title && <p className="font-medium">{selectedMedia.title}</p>}
+              {selectedMedia.credit && <p className="text-white/60 text-sm mt-1">Por: {selectedMedia.credit}</p>}
+            </div>
+          )}
+        </div>
+      )}
     </Layout>
   )
 }
