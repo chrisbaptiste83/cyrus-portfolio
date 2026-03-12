@@ -14,18 +14,32 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
   ]
 
   // Get only images for the showcase grid
-  const showcaseImages = allMedia.filter(m => m.media_type === 'image').slice(0, 5)
+  const arenaImages = allMedia.filter(m => m.media_type === 'image').slice(0, 3)
+
+  // Mix artist artworks and Arena Negra media for the showcase
+  const showcaseItems = [
+    // First: Arena Negra image (featured large)
+    arenaImages[0] && { type: 'arena', ...arenaImages[0] },
+    // Second: Artist artwork
+    artworks[0] && { type: 'artwork', ...artworks[0] },
+    // Third: Arena Negra image
+    arenaImages[1] && { type: 'arena', ...arenaImages[1] },
+    // Fourth: Artist artwork
+    artworks[1] && { type: 'artwork', ...artworks[1] },
+    // Fifth: Arena Negra image
+    arenaImages[2] && { type: 'arena', ...arenaImages[2] },
+  ].filter(Boolean)
 
   return (
     <Layout>
       {/* Hero Section with Artwork Background */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Background Arena Negra Collage */}
+        {/* Background Mixed Collage */}
         <div className="absolute inset-0 grid grid-cols-3 opacity-20">
-          {showcaseImages.slice(0, 6).map((media, i) => (
-            <div key={media.id} className="relative overflow-hidden">
+          {[...arenaImages.slice(0, 3), ...artworks.slice(0, 3)].map((item, i) => (
+            <div key={`bg-${i}`} className="relative overflow-hidden">
               <img
-                src={media.file_url}
+                src={item.file_url || item.image}
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -116,79 +130,82 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
               </div>
             </div>
 
-            {/* Arena Negra Media Display */}
+            {/* Mixed Media Display - Artist Work + Arena Negra */}
             <div className="relative">
               <div className="grid grid-cols-6 grid-rows-4 gap-2 sm:gap-3 h-[400px] sm:h-[500px]">
                 {/* Large featured image */}
-                {showcaseImages[0] && (
+                {showcaseItems[0] && (
                   <div
                     className="col-span-4 row-span-3 group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => setSelectedMedia(showcaseImages[0])}
+                    onClick={() => showcaseItems[0].type === 'arena' && setSelectedMedia(showcaseItems[0])}
                   >
                     <img
-                      src={showcaseImages[0].file_url}
-                      alt={showcaseImages[0].title}
+                      src={showcaseItems[0].file_url || showcaseItems[0].image}
+                      alt={showcaseItems[0].title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
-                        <p className="text-white text-sm font-medium">{showcaseImages[0].title}</p>
-                        {showcaseImages[0].credit && (
-                          <p className="text-white/60 text-xs">Por: {showcaseImages[0].credit}</p>
+                        <p className="text-white text-sm font-medium">{showcaseItems[0].title}</p>
+                        {showcaseItems[0].credit && (
+                          <p className="text-white/60 text-xs">Por: {showcaseItems[0].credit}</p>
+                        )}
+                        {showcaseItems[0].year && (
+                          <p className="text-white/60 text-xs">{showcaseItems[0].year}</p>
                         )}
                       </div>
                     </div>
                   </div>
                 )}
                 {/* Side column - two stacked images */}
-                {showcaseImages[1] && (
+                {showcaseItems[1] && (
                   <div
                     className="col-span-2 row-span-2 group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => setSelectedMedia(showcaseImages[1])}
+                    onClick={() => showcaseItems[1].type === 'arena' && setSelectedMedia(showcaseItems[1])}
                   >
                     <img
-                      src={showcaseImages[1].file_url}
-                      alt={showcaseImages[1].title}
+                      src={showcaseItems[1].file_url || showcaseItems[1].image}
+                      alt={showcaseItems[1].title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
                   </div>
                 )}
-                {showcaseImages[2] && (
+                {showcaseItems[2] && (
                   <div
                     className="col-span-2 row-span-2 group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => setSelectedMedia(showcaseImages[2])}
+                    onClick={() => showcaseItems[2].type === 'arena' && setSelectedMedia(showcaseItems[2])}
                   >
                     <img
-                      src={showcaseImages[2].file_url}
-                      alt={showcaseImages[2].title}
+                      src={showcaseItems[2].file_url || showcaseItems[2].image}
+                      alt={showcaseItems[2].title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
                   </div>
                 )}
                 {/* Bottom row - two images */}
-                {showcaseImages[3] && (
+                {showcaseItems[3] && (
                   <div
                     className="col-span-2 row-span-1 group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => setSelectedMedia(showcaseImages[3])}
+                    onClick={() => showcaseItems[3].type === 'arena' && setSelectedMedia(showcaseItems[3])}
                   >
                     <img
-                      src={showcaseImages[3].file_url}
-                      alt={showcaseImages[3].title}
+                      src={showcaseItems[3].file_url || showcaseItems[3].image}
+                      alt={showcaseItems[3].title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
                   </div>
                 )}
-                {showcaseImages[4] && (
+                {showcaseItems[4] && (
                   <div
                     className="col-span-2 row-span-1 group relative overflow-hidden rounded-xl cursor-pointer"
-                    onClick={() => setSelectedMedia(showcaseImages[4])}
+                    onClick={() => showcaseItems[4].type === 'arena' && setSelectedMedia(showcaseItems[4])}
                   >
                     <img
-                      src={showcaseImages[4].file_url}
-                      alt={showcaseImages[4].title}
+                      src={showcaseItems[4].file_url || showcaseItems[4].image}
+                      alt={showcaseItems[4].title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
