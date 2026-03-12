@@ -5,9 +5,6 @@ import { Link } from '@inertiajs/react'
 export default function ArenaNegra({ artworks, gallery_media, gallery_info, instagram_gallery }) {
   const [selectedMedia, setSelectedMedia] = useState(null)
 
-  // Get featured artworks for the hero background
-  const showcaseArtworks = artworks.slice(0, 6)
-
   // Combine all gallery media into one array
   const allMedia = [
     ...(gallery_media?.student_work || []),
@@ -16,16 +13,19 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
     ...(gallery_media?.events || []),
   ]
 
+  // Get only images for the showcase grid
+  const showcaseImages = allMedia.filter(m => m.media_type === 'image').slice(0, 5)
+
   return (
     <Layout>
       {/* Hero Section with Artwork Background */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Background Artwork Collage */}
+        {/* Background Arena Negra Collage */}
         <div className="absolute inset-0 grid grid-cols-3 opacity-20">
-          {artworks.slice(0, 6).map((artwork, i) => (
-            <div key={artwork.id} className="relative overflow-hidden">
+          {showcaseImages.slice(0, 6).map((media, i) => (
+            <div key={media.id} className="relative overflow-hidden">
               <img
-                src={artwork.image}
+                src={media.file_url}
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -116,30 +116,84 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
               </div>
             </div>
 
-            {/* Artwork Display */}
+            {/* Arena Negra Media Display */}
             <div className="relative">
-              <div className="grid grid-cols-2 gap-4">
-                {showcaseArtworks.slice(0, 4).map((artwork, index) => (
-                  <Link
-                    key={artwork.id}
-                    href="/gallery"
-                    className={`group relative overflow-hidden rounded-lg ${
-                      index === 0 ? 'col-span-2 aspect-[16/10]' : 'aspect-square'
-                    }`}
+              <div className="grid grid-cols-6 grid-rows-4 gap-2 sm:gap-3 h-[400px] sm:h-[500px]">
+                {/* Large featured image */}
+                {showcaseImages[0] && (
+                  <div
+                    className="col-span-4 row-span-3 group relative overflow-hidden rounded-xl cursor-pointer"
+                    onClick={() => setSelectedMedia(showcaseImages[0])}
                   >
                     <img
-                      src={artwork.image}
-                      alt={artwork.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      src={showcaseImages[0].file_url}
+                      alt={showcaseImages[0].title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
-                        <p className="text-white text-sm font-medium">{artwork.title}</p>
-                        <p className="text-white/60 text-xs">{artwork.year}</p>
+                        <p className="text-white text-sm font-medium">{showcaseImages[0].title}</p>
+                        {showcaseImages[0].credit && (
+                          <p className="text-white/60 text-xs">Por: {showcaseImages[0].credit}</p>
+                        )}
                       </div>
                     </div>
-                  </Link>
-                ))}
+                  </div>
+                )}
+                {/* Side column - two stacked images */}
+                {showcaseImages[1] && (
+                  <div
+                    className="col-span-2 row-span-2 group relative overflow-hidden rounded-xl cursor-pointer"
+                    onClick={() => setSelectedMedia(showcaseImages[1])}
+                  >
+                    <img
+                      src={showcaseImages[1].file_url}
+                      alt={showcaseImages[1].title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                  </div>
+                )}
+                {showcaseImages[2] && (
+                  <div
+                    className="col-span-2 row-span-2 group relative overflow-hidden rounded-xl cursor-pointer"
+                    onClick={() => setSelectedMedia(showcaseImages[2])}
+                  >
+                    <img
+                      src={showcaseImages[2].file_url}
+                      alt={showcaseImages[2].title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                  </div>
+                )}
+                {/* Bottom row - two images */}
+                {showcaseImages[3] && (
+                  <div
+                    className="col-span-2 row-span-1 group relative overflow-hidden rounded-xl cursor-pointer"
+                    onClick={() => setSelectedMedia(showcaseImages[3])}
+                  >
+                    <img
+                      src={showcaseImages[3].file_url}
+                      alt={showcaseImages[3].title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                  </div>
+                )}
+                {showcaseImages[4] && (
+                  <div
+                    className="col-span-2 row-span-1 group relative overflow-hidden rounded-xl cursor-pointer"
+                    onClick={() => setSelectedMedia(showcaseImages[4])}
+                  >
+                    <img
+                      src={showcaseImages[4].file_url}
+                      alt={showcaseImages[4].title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                  </div>
+                )}
               </div>
 
               {/* Decorative Element */}
