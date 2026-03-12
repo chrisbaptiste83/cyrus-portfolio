@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_01_092123) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_11_231942) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -70,6 +70,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_01_092123) do
     t.string "year"
     t.text "medium"
     t.string "dimensions"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "gallery_media", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "category"
+    t.integer "media_type"
+    t.string "credit"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
