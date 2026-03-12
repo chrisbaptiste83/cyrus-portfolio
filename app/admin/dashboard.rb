@@ -12,8 +12,8 @@ ActiveAdmin.register_page "Dashboard" do
               span "Artworks"
             end
             div class: "stat-card" do
-              h3 Video.count.to_s
-              span "Videos"
+              h3 GalleryMedia.count.to_s
+              span "Arena Negra Media"
             end
           end
         end
@@ -40,18 +40,18 @@ ActiveAdmin.register_page "Dashboard" do
       end
 
       column do
-        panel "Recent Videos" do
-          table_for Video.unscoped.order(created_at: :desc).limit(5) do
+        panel "Recent Arena Negra Media" do
+          table_for GalleryMedia.unscoped.order(created_at: :desc).limit(5) do
             column :id
             column :title
-            column :position
+            column :category
             column :created_at
-            column "" do |video|
-              link_to "View", admin_video_path(video)
+            column "" do |media|
+              link_to "View", admin_gallery_medium_path(media)
             end
           end
           div class: "panel-footer" do
-            link_to "View All Videos", admin_videos_path
+            link_to "View All Media", admin_gallery_media_path
           end
         end
       end
