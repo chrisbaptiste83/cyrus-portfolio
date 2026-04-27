@@ -40,3 +40,8 @@
 
 # Ignore test coverage reports
 /coverage
+
+# Ignore local development artifacts.
+/.ruby-lsp
+/.codex
+.DS_Store
