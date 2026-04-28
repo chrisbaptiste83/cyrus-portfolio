@@ -72,7 +72,9 @@ videos_data.each do |data|
   end
 end
 
-gallery_images = Dir[Rails.root.join("public", "images", "*")].sort
+gallery_images = Dir[Rails.root.join("public", "images", "*")].reject do |path|
+  File.basename(path) == "image1.jpeg"
+end.sort
 gallery_videos = Dir[Rails.root.join("public", "videos", "*")].sort
 
 gallery_images.each_with_index do |path, index|
