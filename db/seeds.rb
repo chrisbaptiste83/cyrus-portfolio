@@ -72,4 +72,35 @@ videos_data.each do |data|
   end
 end
 
+gallery_images = Dir[Rails.root.join("public", "images", "*")].sort
+gallery_videos = Dir[Rails.root.join("public", "videos", "*")].sort
+
+gallery_images.each_with_index do |path, index|
+  filename = File.basename(path)
+  media = GalleryMedia.find_or_initialize_by(title: filename)
+  media.assign_attributes(
+    description: "Restored from project folder",
+    category: :exhibition,
+    media_type: :image,
+    position: index + 1
+  )
+  media.file.attach(io: File.open(path), filename: filename) unless media.file.attached?
+  media.save!
+  puts "Restored gallery image: #{filename}"
+end
+
+gallery_videos.each_with_index do |path, index|
+  filename = File.basename(path)
+  media = GalleryMedia.find_or_initialize_by(title: filename)
+  media.assign_attributes(
+    description: "Restored from project folder",
+    category: :event,
+    media_type: :video,
+    position: index + 1
+  )
+  media.file.attach(io: File.open(path), filename: filename) unless media.file.attached?
+  media.save!
+  puts "Restored gallery video: #{filename}"
+end
+
 puts "Seeding complete!"
