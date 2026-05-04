@@ -84,7 +84,7 @@ export default function Home({ artist, artworks }) {
             {artworks.slice(0, 8).map((artwork, index) => (
               <Link
                 key={artwork.id}
-                href="/gallery"
+                href={`/gallery/${artwork.id}`}
                 className={`group relative overflow-hidden bg-base-200 rounded-xl ${
                   index === 0 || index === 5 ? 'md:col-span-2 md:row-span-2' : ''
                 }`}
@@ -188,14 +188,22 @@ export default function Home({ artist, artworks }) {
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 text-center">
         <p className="text-xs sm:text-sm tracking-[0.2em] uppercase text-base-content/40 mb-3 sm:mb-4">Get in touch</p>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-6 sm:mb-8">Interested in a piece?</h2>
-        <a
-          href={artist.instagram_artist}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-4 border border-base-content/20 hover:bg-base-content hover:text-base-100 transition-all duration-300"
-        >
-          Contact via Instagram
-        </a>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-base-content text-base-100 hover:bg-base-content/90 transition-all duration-300 text-sm"
+          >
+            Send a message
+          </Link>
+          <a
+            href={artist.instagram_artist}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 border border-base-content/20 hover:bg-base-content hover:text-base-100 transition-all duration-300 text-sm"
+          >
+            Contact via Instagram
+          </a>
+        </div>
       </section>
     </Layout>
   )

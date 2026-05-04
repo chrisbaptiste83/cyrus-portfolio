@@ -1,9 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from './Layout'
 import { Head, Link } from '@inertiajs/react'
 
 export default function Gallery({ artworks }) {
   const [selectedArtwork, setSelectedArtwork] = useState(null)
+
+  useEffect(() => {
+    if (!selectedArtwork) return
+    const idx = artworks.findIndex(a => a.id === selectedArtwork.id)
+
+    const handleKey = (e) => {
+      if (e.key === 'Escape') setSelectedArtwork(null)
+      if (e.key === 'ArrowRight' && idx < artworks.length - 1) setSelectedArtwork(artworks[idx + 1])
+      if (e.key === 'ArrowLeft' && idx > 0) setSelectedArtwork(artworks[idx - 1])
+    }
+
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [selectedArtwork, artworks])
 
   return (
     <Layout>
@@ -56,66 +70,100 @@ export default function Gallery({ artworks }) {
       </section>
 
       {/* Modal for artwork details */}
-      {selectedArtwork && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
-          onClick={() => setSelectedArtwork(null)}
-        >
-          <button
-            className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
+      {selectedArtwork && (() => {
+        const idx = artworks.findIndex(a => a.id === selectedArtwork.id)
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
             onClick={() => setSelectedArtwork(null)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            <button
+              className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
+              onClick={() => setSelectedArtwork(null)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
 
-          <div
-            className="max-w-5xl w-full max-h-[90vh] overflow-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-              <div className="bg-base-200 aspect-[4/5] flex items-center justify-center">
-                <img
-                  src={selectedArtwork.image}
-                  alt={selectedArtwork.title}
-                  className="w-full h-full object-contain"
-                  onError={(e) => { e.target.style.display = 'none' }}
-                />
-              </div>
+            {/* Prev / Next arrows */}
+            {idx > 0 && (
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors p-2"
+                onClick={(e) => { e.stopPropagation(); setSelectedArtwork(artworks[idx - 1]) }}
+                aria-label="Previous artwork"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+            {idx < artworks.length - 1 && (
+              <button
+                className="absolute right-16 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors p-2"
+                onClick={(e) => { e.stopPropagation(); setSelectedArtwork(artworks[idx + 1]) }}
+                aria-label="Next artwork"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
 
-              <div className="flex flex-col justify-center text-white">
-                <h2 className="text-3xl md:text-4xl font-light mb-6">{selectedArtwork.title}</h2>
-                <div className="space-y-4 text-white/70">
-                  <div className="flex justify-between border-b border-white/10 pb-3">
-                    <span className="text-sm tracking-wide uppercase">Year</span>
-                    <span>{selectedArtwork.year}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-white/10 pb-3">
-                    <span className="text-sm tracking-wide uppercase">Medium</span>
-                    <span className="text-right max-w-[200px]">{selectedArtwork.medium}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-white/10 pb-3">
-                    <span className="text-sm tracking-wide uppercase">Dimensions</span>
-                    <span>{selectedArtwork.dimensions}</span>
-                  </div>
+            <div
+              className="max-w-5xl w-full max-h-[90vh] overflow-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div className="bg-base-200 aspect-[4/5] flex items-center justify-center">
+                  <img
+                    src={selectedArtwork.image}
+                    alt={selectedArtwork.title}
+                    className="w-full h-full object-contain"
+                    onError={(e) => { e.target.style.display = 'none' }}
+                  />
                 </div>
 
-                {/* View full page link */}
-                <Link
-                  href={`/gallery/${selectedArtwork.id}`}
-                  className="mt-8 inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
-                >
-                  View full page
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
+                <div className="flex flex-col justify-center text-white">
+                  <h2 className="text-3xl md:text-4xl font-light mb-6">{selectedArtwork.title}</h2>
+                  <div className="space-y-4 text-white/70">
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-sm tracking-wide uppercase">Year</span>
+                      <span>{selectedArtwork.year}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-sm tracking-wide uppercase">Medium</span>
+                      <span className="text-right max-w-[200px]">{selectedArtwork.medium}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-sm tracking-wide uppercase">Dimensions</span>
+                      <span>{selectedArtwork.dimensions}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex flex-col gap-3">
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center gap-2 text-sm px-5 py-3 bg-white text-black hover:bg-white/90 transition-colors"
+                    >
+                      ¿Interesado? Contactar
+                    </Link>
+                    <Link
+                      href={`/gallery/${selectedArtwork.id}`}
+                      className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
+                    >
+                      Ver página completa
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
     </Layout>
   )
 }

@@ -69,14 +69,20 @@ export default function ArtworkShow({ artwork, prev_id, next_id }) {
                 )}
               </div>
 
-              <div className="mt-10">
+              <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-base-content text-base-100 hover:bg-base-content/90 transition-all duration-300 text-sm"
+                >
+                  ¿Interesado? Contactar
+                </Link>
                 <a
                   href="https://www.instagram.com/cyrusbaptiste.artist"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-6 py-3 border border-base-content/20 hover:bg-base-content hover:text-base-100 transition-all duration-300 text-sm"
                 >
-                  ¿Interesado? Contactar por Instagram
+                  Instagram
                 </a>
               </div>
             </div>

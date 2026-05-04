@@ -1,9 +1,8 @@
 import React from 'react'
 import Layout from './Layout'
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 
 export default function Contact() {
-  const { flash } = usePage().props
   const { data, setData, post, processing } = useForm({
     name: '',
     email: '',
@@ -39,18 +38,6 @@ export default function Contact() {
       {/* Form */}
       <section className="px-4 sm:px-6 lg:px-10 pb-16 sm:pb-20 lg:pb-32">
         <div className="max-w-xl mx-auto">
-          {/* Flash messages */}
-          {flash?.notice && (
-            <div className="mb-8 p-4 border border-base-content/20 text-base-content/80 rounded-lg text-sm text-center">
-              {flash.notice}
-            </div>
-          )}
-          {flash?.alert && (
-            <div className="mb-8 p-4 border border-error/40 text-error rounded-lg text-sm text-center">
-              {flash.alert}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-xs tracking-[0.2em] uppercase text-base-content/50 mb-2">
