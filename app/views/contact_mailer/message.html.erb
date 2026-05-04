@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: sans-serif; color: #111; max-width: 600px; margin: 0 auto; padding: 24px;">
+    <h2 style="font-weight: 300; border-bottom: 1px solid #eee; padding-bottom: 16px;">
+      Nuevo mensaje desde cyrusbaptiste.com
+    </h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+      <tr>
+        <td style="padding: 10px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; width: 100px;">Nombre</td>
+        <td style="padding: 10px 0;"><%= @name %></td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Email</td>
+        <td style="padding: 10px 0;"><a href="mailto:<%= @email %>"><%= @email %></a></td>
+      </tr>
+    </table>
+
+    <div style="background: #f5f5f5; border-radius: 8px; padding: 20px; margin-top: 8px;">
+      <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;"><%= @body %></p>
+    </div>
+
+    <p style="color: #aaa; font-size: 12px; margin-top: 32px;">
+      Responde directamente a este correo para contestar a <%= @name %>.
+    </p>
+  </body>
+</html>
