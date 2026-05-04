@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react'
 import Layout from './Layout'
 import { Head, Link } from '@inertiajs/react'
 
+const CATEGORIES = [
+  { key: 'all', label: 'Todo' },
+  { key: 'student_work', label: 'Estudiantes' },
+  { key: 'exhibitions', label: 'Exposiciones' },
+  { key: 'workshops', label: 'Talleres' },
+  { key: 'events', label: 'Eventos' },
+]
+
 export default function ArenaNegra({ artworks, gallery_media, gallery_info, instagram_gallery }) {
   const [selectedMedia, setSelectedMedia] = useState(null)
+  const [filterCategory, setFilterCategory] = useState('all')
 
   useEffect(() => {
     if (!selectedMedia) return
@@ -12,28 +21,32 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
     return () => window.removeEventListener('keydown', handleKey)
   }, [selectedMedia])
 
-  // Combine all gallery media into one array
-  const allMedia = [
-    ...(gallery_media?.student_work || []),
-    ...(gallery_media?.exhibitions || []),
-    ...(gallery_media?.workshops || []),
-    ...(gallery_media?.events || []),
+  // Tag each media item with its category
+  const taggedMedia = [
+    ...(gallery_media?.student_work || []).map(m => ({ ...m, category: 'student_work' })),
+    ...(gallery_media?.exhibitions || []).map(m => ({ ...m, category: 'exhibitions' })),
+    ...(gallery_media?.workshops || []).map(m => ({ ...m, category: 'workshops' })),
+    ...(gallery_media?.events || []).map(m => ({ ...m, category: 'events' })),
   ]
 
-  // Get only images for the showcase grid
-  const arenaImages = allMedia.filter(m => m.media_type === 'image').slice(0, 3)
+  const filteredMedia = filterCategory === 'all'
+    ? taggedMedia
+    : taggedMedia.filter(m => m.category === filterCategory)
+
+  const availableCategories = CATEGORIES.filter(cat =>
+    cat.key === 'all' || taggedMedia.some(m => m.category === cat.key)
+  )
+
+  // Get images for showcase + hero
+  const arenaImages = taggedMedia.filter(m => m.media_type === 'image').slice(0, 3)
+  const heroImage = arenaImages[0]?.file_url || artworks[0]?.image || null
 
   // Mix artist artworks and Arena Negra media for the showcase
   const showcaseItems = [
-    // First: Arena Negra image (featured large)
     arenaImages[0] && { type: 'arena', ...arenaImages[0] },
-    // Second: Artist artwork
     artworks[0] && { type: 'artwork', ...artworks[0] },
-    // Third: Arena Negra image
     arenaImages[1] && { type: 'arena', ...arenaImages[1] },
-    // Fourth: Artist artwork
     artworks[1] && { type: 'artwork', ...artworks[1] },
-    // Fifth: Arena Negra image
     arenaImages[2] && { type: 'arena', ...arenaImages[2] },
   ].filter(Boolean)
 
@@ -46,73 +59,86 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
         <meta property="og:description" content="Un espacio independiente para el arte en el corazón de Monterrey. Galería, talleres y clases de arte." />
       </Head>
 
-      {/* Hero Section with Artwork Background */}
-      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Background Mixed Collage */}
-        <div className="absolute inset-0 grid grid-cols-3 opacity-20">
-          {[...arenaImages.slice(0, 3), ...artworks.slice(0, 3)].map((item, i) => (
-            <div key={`bg-${i}`} className="relative overflow-hidden">
-              <img
-                src={item.file_url || item.image}
-                alt=""
-                className="w-full h-full object-cover"
-              />
+      {/* Hero Section — Cinematic Full Bleed */}
+      <section className="relative min-h-screen flex items-end overflow-hidden bg-black">
+        {/* Full-bleed background image */}
+        {heroImage && (
+          <div className="absolute inset-0">
+            <img src={heroImage} alt="" className="w-full h-full object-cover opacity-55" aria-hidden="true" />
+          </div>
+        )}
+
+        {/* Cinematic gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/55 to-transparent" />
+
+        {/* Top metadata bar */}
+        <div className="absolute top-0 left-0 right-0 px-4 sm:px-6 lg:px-10 pt-8">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <p className="text-[10px] tracking-[0.4em] uppercase text-white/25">Arena Negra</p>
+            <p className="text-[10px] tracking-[0.3em] uppercase text-white/20">Est. 2024 · Monterrey, MX</p>
+          </div>
+        </div>
+
+        {/* Bottom content */}
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-10 pb-16 sm:pb-20 lg:pb-28">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-10 h-px bg-white/40" />
+              <p className="text-xs tracking-[0.35em] uppercase text-white/50">Galería &amp; Escuela de Arte</p>
             </div>
-          ))}
-        </div>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-base-100 via-base-100/90 to-base-100" />
+            <h1 className="text-7xl sm:text-8xl md:text-9xl font-light tracking-tight text-white leading-[0.88] mb-8">
+              Arena<br />
+              <span className="italic">Negra</span>
+            </h1>
 
-        {/* Content */}
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-10 py-20">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <span className="w-8 h-px bg-base-content/30" />
-            <p className="text-xs sm:text-sm tracking-[0.3em] uppercase text-base-content/50">
-              Gallery & Art School
+            <p className="text-white/50 text-base sm:text-lg max-w-xs sm:max-w-sm mb-10 leading-relaxed">
+              Un espacio independiente para el arte en el corazón de Monterrey
             </p>
-            <span className="w-8 h-px bg-base-content/30" />
-          </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight mb-6">
-            Arena Negra
-          </h1>
-
-          <p className="text-base-content/50 text-lg sm:text-xl max-w-md mx-auto mb-8">
-            Un espacio independiente para el arte en el corazón de Monterrey
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <a
-              href={instagram_gallery}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-base-content text-base-100 hover:bg-base-content/90 transition-colors text-sm sm:text-base"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-              Follow Us
-            </a>
-            <Link
-              href="/gallery"
-              className="inline-flex items-center gap-3 text-sm tracking-wide border-b border-base-content/30 pb-1 hover:border-base-content transition-colors"
-            >
-              View Artist Gallery
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <a
+                href={instagram_gallery}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-white text-black hover:bg-white/90 transition-colors text-sm"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                @arenanegragaleria
+              </a>
+              <Link
+                href="/gallery"
+                className="inline-flex items-center gap-3 px-6 py-3 border border-white/30 text-white hover:bg-white/10 transition-colors text-sm"
+              >
+                Ver Galería del Artista
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-base-content/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 right-8 sm:right-10 flex flex-col items-center gap-3 text-white/25">
+          <span className="text-[9px] tracking-[0.3em] uppercase" style={{ writingMode: 'vertical-rl' }}>Scroll</span>
+          <div className="w-px h-10 bg-white/20 animate-bounce" />
         </div>
       </section>
+
+      {/* Marquee text strip */}
+      <div className="overflow-hidden py-3 border-y border-base-content/8 bg-base-200/50 select-none">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {Array(6).fill(null).map((_, i) => (
+            <span key={i} className="flex-shrink-0 text-[10px] tracking-[0.3em] uppercase text-base-content/35 mx-10">
+              · Galería de Arte · Escuela de Arte · Semillero Purísima · Monterrey · 2024 · Arena Negra ·
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* About Section with Side Artwork */}
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24">
@@ -234,20 +260,46 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
         </div>
       </section>
 
-      {/* Gallery Media Section - Beautiful Masonry Grid */}
-      {allMedia.length > 0 && (
+      {/* Gallery Media Section - Masonry Grid */}
+      {taggedMedia.length > 0 && (
         <section className="bg-base-200/30 py-16 sm:py-20 lg:py-24">
           <div className="px-4 sm:px-6 lg:px-10">
             <div className="max-w-7xl mx-auto">
               {/* Section Header */}
-              <div className="text-center mb-12">
-                <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-4">Nuestra Comunidad</p>
-                <h2 className="text-3xl sm:text-4xl font-light">Galería del Estudio</h2>
+              <div className="mb-12">
+                <div className="text-center mb-8">
+                  <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-4">Nuestra Comunidad</p>
+                  <h2 className="text-3xl sm:text-4xl font-light">Galería del Estudio</h2>
+                </div>
+
+                {/* Category filter tabs */}
+                {availableCategories.length > 1 && (
+                  <div className="flex items-center justify-center gap-2 flex-wrap mt-6">
+                    {availableCategories.map(cat => (
+                      <button
+                        key={cat.key}
+                        onClick={() => setFilterCategory(cat.key)}
+                        className={`px-5 py-2 text-xs tracking-[0.2em] uppercase transition-all duration-200 border ${
+                          filterCategory === cat.key
+                            ? 'bg-base-content text-base-100 border-base-content'
+                            : 'border-base-content/20 text-base-content/50 hover:border-base-content/50 hover:text-base-content/80'
+                        }`}
+                      >
+                        {cat.label}
+                        {cat.key !== 'all' && (
+                          <span className="ml-2 opacity-60">
+                            {taggedMedia.filter(m => m.category === cat.key).length}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Masonry Grid */}
               <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 sm:gap-4">
-                {allMedia.map((item, index) => (
+                {filteredMedia.map((item, index) => (
                   <div
                     key={item.id}
                     className="break-inside-avoid mb-3 sm:mb-4 group cursor-pointer"

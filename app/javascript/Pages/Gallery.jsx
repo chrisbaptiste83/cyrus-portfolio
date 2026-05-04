@@ -4,6 +4,10 @@ import { Head, Link } from '@inertiajs/react'
 
 export default function Gallery({ artworks }) {
   const [selectedArtwork, setSelectedArtwork] = useState(null)
+  const [filterYear, setFilterYear] = useState(null)
+
+  const years = [...new Set(artworks.map(a => a.year).filter(Boolean))].sort()
+  const filtered = filterYear ? artworks.filter(a => String(a.year) === String(filterYear)) : artworks
 
   useEffect(() => {
     if (!selectedArtwork) return
@@ -32,13 +36,44 @@ export default function Gallery({ artworks }) {
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24 text-center">
         <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Portfolio</p>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light">Gallery</h1>
+        <p className="mt-4 text-base-content/40 text-sm tabular-nums">
+          {filterYear ? `${filtered.length} work${filtered.length !== 1 ? 's' : ''} · ${filterYear}` : `${artworks.length} works`}
+        </p>
       </section>
 
       {/* Gallery Grid */}
       <section className="px-4 sm:px-6 lg:px-10 pb-16 sm:pb-20 lg:pb-24">
         <div className="max-w-7xl mx-auto">
+          {/* Year filter */}
+          {years.length > 1 && (
+            <div className="flex items-center gap-2 mb-8 sm:mb-10 overflow-x-auto pb-1">
+              <button
+                className={`flex-shrink-0 px-4 py-1.5 text-xs tracking-[0.2em] uppercase transition-all duration-200 border ${
+                  !filterYear
+                    ? 'bg-base-content text-base-100 border-base-content'
+                    : 'border-base-content/20 text-base-content/50 hover:border-base-content/50'
+                }`}
+                onClick={() => setFilterYear(null)}
+              >
+                All <span className="ml-1 opacity-60">{artworks.length}</span>
+              </button>
+              {years.map(year => (
+                <button
+                  key={year}
+                  className={`flex-shrink-0 px-4 py-1.5 text-xs tracking-[0.2em] uppercase transition-all duration-200 border ${
+                    String(filterYear) === String(year)
+                      ? 'bg-base-content text-base-100 border-base-content'
+                      : 'border-base-content/20 text-base-content/50 hover:border-base-content/50'
+                  }`}
+                  onClick={() => setFilterYear(String(filterYear) === String(year) ? null : year)}
+                >
+                  {year} <span className="ml-1 opacity-60">{artworks.filter(a => String(a.year) === String(year)).length}</span>
+                </button>
+              ))}
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {artworks.map((artwork) => (
+            {filtered.map((artwork) => (
               <div
                 key={artwork.id}
                 className="group cursor-pointer"
@@ -57,7 +92,21 @@ export default function Gallery({ artworks }) {
                   <div className="hidden items-center justify-center w-full h-full">
                     <span className="text-sm text-base-content/30">{artwork.title}</span>
                   </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                      <p className="text-white text-sm font-light leading-snug">{artwork.title}</p>
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        <span className="text-white/60 text-xs">{artwork.year}</span>
+                        {artwork.medium && (
+                          <>
+                            <span className="text-white/30 text-xs">·</span>
+                            <span className="text-white/50 text-xs line-clamp-1">{artwork.medium}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="mt-3 sm:mt-4 space-y-1">
                   <h3 className="text-sm sm:text-base font-medium group-hover:opacity-70 transition-opacity">{artwork.title}</h3>

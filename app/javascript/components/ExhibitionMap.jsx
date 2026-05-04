@@ -40,6 +40,64 @@ const LAT_TICKS = [60, 30, 0, -30, -60]
 const latLines = Array.from({ length: 17 }, (_, i) => -80 + i * 10)
 const lonLines = Array.from({ length: 36 }, (_, i) => -175 + i * 10)
 
+const CONTINENTS = [
+  {
+    name: 'North America',
+    points: [
+      [-168,71],[-140,60],[-130,55],[-124,49],
+      [-117,32],[-110,23],[-90,16],
+      [-80,24],[-66,44],[-52,47],
+      [-64,60],[-78,73],[-100,72],[-140,70],
+    ],
+  },
+  {
+    name: 'South America',
+    points: [
+      [-78,8],[-60,7],[-50,3],
+      [-35,-8],[-35,-23],[-48,-33],
+      [-57,-39],[-65,-56],[-70,-54],
+      [-75,-50],[-76,-43],[-80,-30],
+    ],
+  },
+  {
+    name: 'Europe',
+    points: [
+      [-10,36],[2,36],[14,37],[20,38],
+      [28,40],[36,40],[36,48],
+      [26,57],[20,64],[26,72],
+      [5,72],[-5,58],[-10,44],
+    ],
+  },
+  {
+    name: 'Africa',
+    points: [
+      [-17,14],[-8,4],[8,4],[24,2],
+      [42,10],[44,23],[38,30],
+      [33,35],[10,37],[-2,35],[-17,28],
+    ],
+  },
+  {
+    name: 'Asia',
+    points: [
+      [36,48],[62,54],[82,60],[110,65],
+      [140,58],[142,47],[130,33],
+      [120,23],[105,12],[100,2],
+      [102,-6],[120,0],[130,4],[126,16],
+      [100,14],[78,8],[70,22],[57,22],
+      [46,23],[36,36],
+    ],
+  },
+  {
+    name: 'Australia',
+    points: [
+      [114,-22],[117,-35],[121,-34],
+      [136,-35],[141,-38],[150,-37],
+      [154,-28],[148,-19],[140,-17],
+      [135,-15],[128,-15],[121,-18],
+    ],
+  },
+]
+
 function Arc({ x1, y1, x2, y2 }) {
   const cx = (x1 + x2) / 2
   const cy = Math.min(y1, y2) - Math.abs(x2 - x1) * 0.22
@@ -93,6 +151,20 @@ export default function ExhibitionMap() {
               />
             )
           })}
+
+          {/* Continent outlines */}
+          {CONTINENTS.map(continent => (
+            <polygon
+              key={continent.name}
+              points={continent.points.map(([lon, lat]) => `${toX(lon)},${toY(lat)}`).join(' ')}
+              fill="currentColor"
+              fillOpacity={0.07}
+              stroke="currentColor"
+              strokeOpacity={0.25}
+              strokeWidth={0.9}
+              strokeLinejoin="round"
+            />
+          ))}
 
           {/* Latitude tick labels */}
           {LAT_TICKS.map(lat => (
