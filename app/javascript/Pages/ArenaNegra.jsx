@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Layout from './Layout'
-import { Link } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 
 export default function ArenaNegra({ artworks, gallery_media, gallery_info, instagram_gallery }) {
   const [selectedMedia, setSelectedMedia] = useState(null)
@@ -32,6 +32,13 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
 
   return (
     <Layout>
+      <Head>
+        <title>Arena Negra — Cyrus Baptiste</title>
+        <meta name="description" content="Arena Negra — galería y escuela de arte independiente en el Semillero Purísima, centro de Monterrey. Fundada por Cyrus Baptiste en 2024." />
+        <meta property="og:title" content="Arena Negra — Galería & Escuela de Arte" />
+        <meta property="og:description" content="Un espacio independiente para el arte en el corazón de Monterrey. Galería, talleres y clases de arte." />
+      </Head>
+
       {/* Hero Section with Artwork Background */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background Mixed Collage */}
@@ -243,7 +250,7 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
                     <div className="relative overflow-hidden rounded-lg bg-base-200">
                       {item.media_type === 'image' ? (
                         <img
-                          src={item.file_url}
+                          src={item.thumbnail_url || item.file_url}
                           alt={item.title}
                           className="w-full transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
                         />

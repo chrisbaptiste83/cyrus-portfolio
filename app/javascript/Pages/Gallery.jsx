@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
 import Layout from './Layout'
+import { Head, Link } from '@inertiajs/react'
 
 export default function Gallery({ artworks }) {
   const [selectedArtwork, setSelectedArtwork] = useState(null)
 
   return (
     <Layout>
+      <Head>
+        <title>Gallery — Cyrus Baptiste</title>
+        <meta name="description" content="Paintings and works by Cyrus Baptiste — oil on canvas, acrylic, tempera, and mixed media. Based in Monterrey, Mexico." />
+        <meta property="og:title" content="Gallery — Cyrus Baptiste" />
+        <meta property="og:description" content="Paintings and works by Cyrus Baptiste — artist and educator based in Monterrey, Mexico." />
+      </Head>
+
       {/* Header */}
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24 text-center">
         <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Portfolio</p>
@@ -24,7 +32,7 @@ export default function Gallery({ artworks }) {
               >
                 <div className="relative overflow-hidden bg-base-200 aspect-[4/5] rounded-xl">
                   <img
-                    src={artwork.image}
+                    src={artwork.thumbnail || artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     onError={(e) => {
@@ -72,9 +80,7 @@ export default function Gallery({ artworks }) {
                   src={selectedArtwork.image}
                   alt={selectedArtwork.title}
                   className="w-full h-full object-contain"
-                  onError={(e) => {
-                    e.target.style.display = 'none'
-                  }}
+                  onError={(e) => { e.target.style.display = 'none' }}
                 />
               </div>
 
@@ -93,10 +99,18 @@ export default function Gallery({ artworks }) {
                     <span className="text-sm tracking-wide uppercase">Dimensions</span>
                     <span>{selectedArtwork.dimensions}</span>
                   </div>
-                  {selectedArtwork.note && (
-                    <p className="text-sm italic pt-4 text-white/50">{selectedArtwork.note}</p>
-                  )}
                 </div>
+
+                {/* View full page link */}
+                <Link
+                  href={`/gallery/${selectedArtwork.id}`}
+                  className="mt-8 inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
+                >
+                  View full page
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>

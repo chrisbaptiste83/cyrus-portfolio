@@ -1,10 +1,17 @@
 import React from 'react'
 import Layout from './Layout'
-import { Link } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 
 export default function Home({ artist, artworks }) {
   return (
     <Layout>
+      <Head>
+        <title>Cyrus Baptiste — Artist & Educator</title>
+        <meta name="description" content="Cyrus Baptiste — artista y educador basado en Monterrey, México. Exploring identity, race, and tolerance through vibrant colors and bold forms." />
+        <meta property="og:title" content="Cyrus Baptiste — Artist & Educator" />
+        <meta property="og:description" content="Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms." />
+        <meta property="og:image" content="https://cyrusbaptiste.com/images/image1.jpeg" />
+      </Head>
       {/* Hero Section with Artist Photo */}
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
@@ -84,7 +91,7 @@ export default function Home({ artist, artworks }) {
               >
                 <div className={`aspect-square ${index === 0 || index === 5 ? 'md:aspect-auto md:h-full' : ''}`}>
                   <img
-                    src={artwork.image}
+                    src={artwork.thumbnail || artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-90"
                     onError={(e) => {

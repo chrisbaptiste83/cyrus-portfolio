@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include InertiaRails::Controller
 
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  inertia_share flash: -> { flash.to_hash }
+
   allow_browser versions: :modern
 end
