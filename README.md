@@ -6,52 +6,85 @@ A modern, full-stack portfolio and gallery management application for artist Cyr
 [![Rails](https://img.shields.io/badge/Rails-8.0.2-CC0000?logo=rubyonrails&logoColor=white)](https://rubyonrails.org)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql&logoColor=white)](https://postgresql.org)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 Live at [cyrusbaptiste.com](https://cyrusbaptiste.com).
 
+---
+
 ## Overview
 
-This application serves as both a portfolio website and content management system, allowing the artist to:
+This application serves as both a portfolio website and content management system for artist Cyrus Baptiste, with:
 
-- Showcase personal artwork with detailed metadata
-- Manage Arena Negra gallery content (student work, exhibitions, workshops, events)
-- Upload and organize images and videos
-- Present a professional, responsive web presence
+- Full artwork gallery with individual pages and social sharing meta tags
+- Arena Negra gallery/art school with categorized media (images + videos)
+- Bio/CV page with exhibition history
+- Contact form with email delivery
+- Theme switcher (dark/light)
+- Admin dashboard for content management
+- Zero-downtime production deployment via Kamal 2
+
+---
 
 ## Tech Stack
 
 ### Backend
 
-- **Ruby 3.4.2** — Latest Ruby with YJIT enabled for improved throughput
-- **Rails 8.0.2** — Full-stack framework with modern defaults
-- **PostgreSQL 16** — Primary database
-- **Active Storage** — File uploads and attachments
-- **ActiveAdmin** — Admin dashboard for content management
-- **Devise** — Authentication for admin users
+| | |
+|---|---|
+| Ruby 3.4.2 | Latest Ruby, YJIT enabled |
+| Rails 8.0.2 | Full-stack framework |
+| PostgreSQL 16 | Primary database |
+| Active Storage | File uploads + image variants via libvips |
+| image_processing 1.x | Image thumbnails and resizing |
+| ActiveAdmin | Admin dashboard |
+| Devise | Admin authentication |
+| Action Mailer | Contact form email delivery |
+| Solid Queue | Background job processing |
 
 ### Frontend
 
-- **React 19** — UI components and interactivity
-- **Inertia.js** — Server-driven single-page app experience
-- **Tailwind CSS 3** — Utility-first styling
-- **DaisyUI 4** — Component library
-- **Hotwire (Turbo + Stimulus)** — Progressive enhancement
+| | |
+|---|---|
+| React 19 | UI components |
+| Inertia.js 2.x | Server-driven SPA (no API layer needed) |
+| Tailwind CSS 3 | Utility-first styling |
+| DaisyUI 4 | Component themes (`black` default, `light` toggle) |
+| esbuild | JavaScript bundling |
 
 ### Infrastructure
 
-- **Kamal 2** — Docker-based zero-downtime deployment
-- **Thruster** — HTTP/2 proxy with auto SSL
-- **Propshaft** — Modern asset pipeline
-- **esbuild** — JavaScript bundling
+| | |
+|---|---|
+| Kamal 2 | Docker-based zero-downtime deployment |
+| Thruster | HTTP/2 asset proxy |
+| Propshaft | Asset pipeline |
+| Let's Encrypt | Auto SSL via Kamal proxy |
+| Cloudflare | CDN (Full SSL mode) |
+
+---
+
+## Pages
+
+| Route | Page | Description |
+|---|---|---|
+| `/` | Home | Hero, selected works grid, bio, Arena Negra CTA, contact CTA |
+| `/gallery` | Gallery | Full artwork grid with lightbox modal + "View full page" links |
+| `/gallery/:id` | ArtworkShow | Individual artwork with full metadata, prev/next nav, OG tags |
+| `/arena-negra` | ArenaNegra | Gallery/school with masonry media grid and artwork marquee |
+| `/bio` | Bio | Artist statement, exhibitions, techniques, Arena Negra section |
+| `/contact` | Contact | Contact form (name, email, message) → Action Mailer |
+| `/admin` | ActiveAdmin | Content management (authenticated) |
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- Ruby 3.4.2 (use `rbenv` — see `.ruby-version`)
+- Ruby 3.4.2 (via `rbenv` — see `.ruby-version`)
 - Node.js 22+ and Yarn
 - PostgreSQL 14+
+- libvips (for image processing — `sudo pacman -S libvips` on Arch, `brew install vips` on macOS)
 
 ### Installation
 
@@ -66,114 +99,150 @@ bin/rails db:create db:migrate db:seed
 bin/dev
 ```
 
-The application will be available at `http://localhost:3000`.
+The application runs at `http://localhost:3000`.
 
 ### Environment Variables
 
 | Variable | Required | Description |
 |---|---|---|
 | `RAILS_MASTER_KEY` | Yes | Decrypts `config/credentials.yml.enc` |
-| `KAMAL_REGISTRY_PASSWORD` | Deploy | Docker registry token |
-| `PGUSER` | No | PostgreSQL user (default: `chris`) |
-| `PGPASSWORD` | No | PostgreSQL password |
-| `PGHOST` | No | PostgreSQL host (default: `localhost`) |
 | `DATABASE_URL` | Production | Full PostgreSQL connection URL |
+| `KAMAL_REGISTRY_PASSWORD` | Deploy | Docker Hub access token |
+| `SMTP_USERNAME` | Production | SMTP account username (Gmail address) |
+| `SMTP_PASSWORD` | Production | SMTP app password |
+| `POSTGRES_PASSWORD` | Production | PostgreSQL container password |
+
+Development mail is set to `:test` — emails are not sent, only captured in `ActionMailer::Base.deliveries`.
 
 ### Admin Access
 
-Access the admin panel at `/admin`. Create an admin user via the Rails console:
+The admin panel is at `/admin`. The default seed creates `admin@example.com` / `password` — change this immediately in production.
 
 ```ruby
-AdminUser.create!(email: "admin@example.com", password: "changeme123")
+# Rails console
+AdminUser.first.update!(email: "you@example.com", password: "strongpassword")
 ```
+
+---
 
 ## Project Structure
 
 ```
 app/
-├── admin/           # ActiveAdmin resources (artworks, gallery_media)
-├── assets/          # Stylesheets and JavaScript
-├── controllers/     # Rails controllers
-├── javascript/      # React components and Inertia pages
-│   ├── Pages/       # Page components (Home, Gallery, ArenaNegra)
-│   └── controllers/ # Stimulus controllers
-├── models/          # ActiveRecord models
-└── views/           # ERB templates and layouts
+├── admin/
+│   ├── artworks.rb         # CRUD for portfolio paintings
+│   └── gallery_media.rb    # CRUD for Arena Negra media
+├── controllers/
+│   └── pages_controller.rb # All public pages + ARTIST_DATA constant
+├── javascript/
+│   ├── app.jsx             # Inertia bootstrap with explicit page map
+│   └── Pages/
+│       ├── Layout.jsx      # Shared nav, footer, flash, theme switcher
+│       ├── Home.jsx
+│       ├── Gallery.jsx
+│       ├── ArtworkShow.jsx
+│       ├── ArenaNegra.jsx
+│       ├── Bio.jsx
+│       └── Contact.jsx
+├── mailers/
+│   └── contact_mailer.rb   # Contact form → email to artist
+├── models/
+│   ├── artwork.rb          # Portfolio paintings (has_one_attached :image)
+│   ├── gallery_media.rb    # Arena Negra media (image + video, categorized)
+│   └── admin_user.rb
+└── views/
+    ├── contact_mailer/     # HTML + text email templates
+    ├── layouts/
+    │   └── application.html.erb
+    └── pwa/
+        └── manifest.json.erb
 
 config/
-├── deploy.yml       # Kamal deployment configuration
-└── routes.rb        # Application routes
+├── deploy.yml              # Kamal 2: server, registry, accessories, secrets
+├── routes.rb
+└── environments/
+    ├── production.rb       # SMTP config via env vars
+    └── development.rb      # Mail delivery: :test
 
 db/
-├── migrate/         # Database migrations
-└── seeds.rb         # Seed data
+├── migrate/
+└── seeds.rb                # Artworks from public/images, Arena Negra media from ../Arena Negra folder
 ```
+
+---
 
 ## Models
 
 ### Artwork
 
-Personal artwork pieces with title, year, medium, dimensions, and attached image.
+| Column | Type | Notes |
+|---|---|---|
+| title | string | required |
+| year | string | |
+| medium | text | |
+| dimensions | string | |
+| position | integer | display order |
+| image | ActiveStorage | required — variants served as 800×1000 thumbnails |
 
 ### GalleryMedia
 
-Arena Negra gallery content supporting both images and videos with categories:
+| Column | Type | Notes |
+|---|---|---|
+| title | string | required |
+| description | text | |
+| category | enum | `student_work`, `exhibition`, `event`, `workshop` |
+| media_type | enum | `image`, `video` |
+| credit | string | optional attribution |
+| position | integer | display order |
+| file | ActiveStorage | required — images served as 800×800 thumbnails |
 
-| Category | Description |
-|---|---|
-| `student_work` | Student projects and creations |
-| `exhibition` | Gallery exhibitions |
-| `workshop` | Art workshops and classes |
-| `event` | Special events |
-
-### AdminUser
-
-Devise-authenticated administrators for content management.
+---
 
 ## Testing
 
 ```bash
 bundle exec rspec                         # full suite
 bundle exec rspec --format documentation  # verbose output
-bundle exec rspec spec/models/            # model specs only
-bundle exec rspec spec/requests/          # request specs only
+bundle exec rspec spec/models/
+bundle exec rspec spec/requests/
 ```
 
-Coverage reports are generated automatically in the `coverage/` directory.
+Coverage reports output to `coverage/`.
 
-## API Endpoints
-
-| Method | Path | Description |
-|---|---|---|
-| GET | `/` | Home page with artist bio and featured works |
-| GET | `/gallery` | Full artwork gallery |
-| GET | `/arena-negra` | Arena Negra gallery and art school page |
-| GET | `/admin` | Admin dashboard (authenticated) |
-
-## Performance
-
-- **YJIT enabled** — Improved Ruby runtime performance
-- **Asset fingerprinting** — Long-lived cache headers for static assets
-- **Image optimization** — Active Storage variants for responsive images
-- **Turbo Drive** — Fast navigation without full-page reloads
-- **Docker multi-stage builds** — Minimal production image size
+---
 
 ## Deployment
 
-Deployed via [Kamal 2](https://kamal-deploy.org) to `cyrusbaptiste.com`:
-
 ```bash
-kamal setup    # first deploy — provisions server and starts containers
-kamal deploy   # zero-downtime rolling deploy
-kamal logs     # tail production logs
-kamal console  # open Rails console in production
+bin/kamal setup    # first deploy — provisions server, starts containers
+bin/kamal deploy   # zero-downtime rolling deploy (runs db:migrate automatically)
+bin/kamal logs     # tail production logs
+bin/kamal console  # Rails console in production container
+bin/kamal shell    # bash in production container
 ```
 
-## License
+### Production checklist
 
-MIT — see [LICENSE](LICENSE) for details.
+Before first deploy:
+
+1. Add secrets to `.kamal/secrets`:
+   ```
+   KAMAL_REGISTRY_PASSWORD=...
+   RAILS_MASTER_KEY=...
+   DATABASE_URL=...
+   POSTGRES_PASSWORD=...
+   SMTP_USERNAME=...
+   SMTP_PASSWORD=...
+   ```
+2. Point DNS to the server IP (`172.236.254.205`)
+3. Set Cloudflare SSL mode to **Full**
+4. Run `bin/kamal setup`
+
+Subsequent deploys: `bin/kamal deploy`
+
+---
 
 ## Acknowledgments
 
 - [Cyrus Baptiste](https://www.instagram.com/cyrusbaptiste.artist) — Artist
-- [Arena Negra](https://www.instagram.com/arenanegragaleria) — Gallery & Art School
+- [Arena Negra](https://www.instagram.com/arenanegragaleria) — Gallery & Art School, Semillero Purísima, Monterrey
