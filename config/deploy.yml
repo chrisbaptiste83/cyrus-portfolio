@@ -25,7 +25,6 @@ env:
     - DATABASE_URL
     - SMTP_USERNAME
     - SMTP_PASSWORD
-    - GOOGLE_CREDENTIALS_JSON
   clear:
     SOLID_QUEUE_IN_PUMA: true
 
