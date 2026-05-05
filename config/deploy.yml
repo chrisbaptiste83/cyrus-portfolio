@@ -12,6 +12,7 @@ proxy:
   ssl: true
   host: cyrusbaptiste.com
   healthcheck:
+    path: /up
     timeout: 60
 
 registry:
