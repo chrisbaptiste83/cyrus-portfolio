@@ -7,13 +7,13 @@ export default function Layout({ children }) {
   const [theme, setTheme] = useState('black')
 
   useEffect(() => {
-    const saved = typeof window !== 'undefined' ? (localStorage.getItem('theme') || 'black') : 'black'
+    const saved = typeof window !== 'undefined' ? (localStorage.getItem('theme') === 'light' ? 'lofi' : (localStorage.getItem('theme') || 'black')) : 'black'
     setTheme(saved)
     document.documentElement.setAttribute('data-theme', saved)
   }, [])
 
   const toggleTheme = () => {
-    const next = theme === 'black' ? 'light' : 'black'
+    const next = theme === 'black' ? 'lofi' : 'black'
     setTheme(next)
     document.documentElement.setAttribute('data-theme', next)
     localStorage.setItem('theme', next)

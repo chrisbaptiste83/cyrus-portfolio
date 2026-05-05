@@ -1,10 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
+import { feature } from 'topojson-client'
+import worldData from 'world-atlas/countries-110m.json'
 
 const W = 960
 const H = 480
 
 const toX = (lon) => ((lon + 180) / 360) * W
 const toY = (lat) => ((90 - lat) / 180) * H
+
+function featureToPath(f) {
+  const geom = f.geometry
+  if (!geom) return ''
+  const polys = geom.type === 'Polygon' ? [geom.coordinates] :
+    geom.type === 'MultiPolygon' ? geom.coordinates : []
+  return polys.map(poly =>
+    poly.map(ring =>
+      ring.map(([lon, lat], i) =>
+        `${i === 0 ? 'M' : 'L'}${toX(lon).toFixed(1)},${toY(lat).toFixed(1)}`
+      ).join(' ') + ' Z'
+    ).join(' ')
+  ).join(' ')
+}
 
 const HOME = { name: 'Monterrey', note: 'Base principal', lat: 25.67, lon: -100.31 }
 
@@ -25,78 +41,7 @@ const INTERNATIONAL = [
   { name: 'Nueva Delhi', country: 'India', lat: 28.61, lon: 77.21 },
 ]
 
-const REGION_LABELS = [
-  { label: 'NORTEAMÉRICA', lon: -100, lat: 52 },
-  { label: 'SUDAMÉRICA', lon: -60, lat: -12 },
-  { label: 'EUROPA', lon: 15, lat: 56 },
-  { label: 'ÁFRICA', lon: 22, lat: 4 },
-  { label: 'ASIA', lon: 90, lat: 44 },
-  { label: 'OCEANÍA', lon: 135, lat: -28 },
-]
-
 const LAT_TICKS = [60, 30, 0, -30, -60]
-
-// Grid lines at 10° intervals
-const latLines = Array.from({ length: 17 }, (_, i) => -80 + i * 10)
-const lonLines = Array.from({ length: 36 }, (_, i) => -175 + i * 10)
-
-const CONTINENTS = [
-  {
-    name: 'North America',
-    points: [
-      [-168,71],[-140,60],[-130,55],[-124,49],
-      [-117,32],[-110,23],[-90,16],
-      [-80,24],[-66,44],[-52,47],
-      [-64,60],[-78,73],[-100,72],[-140,70],
-    ],
-  },
-  {
-    name: 'South America',
-    points: [
-      [-78,8],[-60,7],[-50,3],
-      [-35,-8],[-35,-23],[-48,-33],
-      [-57,-39],[-65,-56],[-70,-54],
-      [-75,-50],[-76,-43],[-80,-30],
-    ],
-  },
-  {
-    name: 'Europe',
-    points: [
-      [-10,36],[2,36],[14,37],[20,38],
-      [28,40],[36,40],[36,48],
-      [26,57],[20,64],[26,72],
-      [5,72],[-5,58],[-10,44],
-    ],
-  },
-  {
-    name: 'Africa',
-    points: [
-      [-17,14],[-8,4],[8,4],[24,2],
-      [42,10],[44,23],[38,30],
-      [33,35],[10,37],[-2,35],[-17,28],
-    ],
-  },
-  {
-    name: 'Asia',
-    points: [
-      [36,48],[62,54],[82,60],[110,65],
-      [140,58],[142,47],[130,33],
-      [120,23],[105,12],[100,2],
-      [102,-6],[120,0],[130,4],[126,16],
-      [100,14],[78,8],[70,22],[57,22],
-      [46,23],[36,36],
-    ],
-  },
-  {
-    name: 'Australia',
-    points: [
-      [114,-22],[117,-35],[121,-34],
-      [136,-35],[141,-38],[150,-37],
-      [154,-28],[148,-19],[140,-17],
-      [135,-15],[128,-15],[121,-18],
-    ],
-  },
-]
 
 function Arc({ x1, y1, x2, y2 }) {
   const cx = (x1 + x2) / 2
@@ -108,90 +53,76 @@ function Arc({ x1, y1, x2, y2 }) {
       stroke="currentColor"
       strokeWidth={0.9}
       strokeDasharray="5 5"
-      opacity={0.22}
+      opacity={0.25}
     />
   )
 }
 
 export default function ExhibitionMap() {
   const [hovered, setHovered] = useState(null)
+
+  const landPath = useMemo(() => {
+    const features = feature(worldData, worldData.objects.countries).features
+    return features.map(featureToPath).join(' ')
+  }, [])
+
   const hx = toX(HOME.lon)
   const hy = toY(HOME.lat)
 
+  const latLines = Array.from({ length: 9 }, (_, i) => -80 + i * 20)
+  const lonLines = Array.from({ length: 19 }, (_, i) => -180 + i * 20)
+
   return (
     <div className="w-full select-none">
-      <div className="relative border border-base-content/10 bg-base-200/40 overflow-hidden">
+      <div className="relative border border-base-content/10 overflow-hidden rounded-sm">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="w-full h-auto"
           aria-label="Mapa de exposiciones internacionales de Cyrus Baptiste"
+          onClick={() => setHovered(null)}
         >
-          {/* Fine grid (every 10°) */}
-          {latLines.map(lat => {
-            const y = toY(lat)
-            const major = lat % 30 === 0
-            return (
-              <line key={`lat-${lat}`}
-                x1={0} y1={y} x2={W} y2={y}
-                stroke="currentColor"
-                strokeWidth={lat === 0 ? 0.8 : major ? 0.45 : 0.18}
-                opacity={lat === 0 ? 0.3 : major ? 0.18 : 0.08}
-              />
-            )
-          })}
-          {lonLines.map(lon => {
-            const x = toX(lon)
-            const major = lon % 30 === 0
-            return (
-              <line key={`lon-${lon}`}
-                x1={x} y1={0} x2={x} y2={H}
-                stroke="currentColor"
-                strokeWidth={lon === 0 ? 0.8 : major ? 0.45 : 0.18}
-                opacity={lon === 0 ? 0.3 : major ? 0.18 : 0.08}
-              />
-            )
-          })}
+          {/* Ocean */}
+          <rect width={W} height={H} fill="currentColor" fillOpacity={0.03} />
 
-          {/* Continent outlines */}
-          {CONTINENTS.map(continent => (
-            <polygon
-              key={continent.name}
-              points={continent.points.map(([lon, lat]) => `${toX(lon)},${toY(lat)}`).join(' ')}
-              fill="currentColor"
-              fillOpacity={0.07}
+          {/* Grid lines */}
+          {latLines.map(lat => (
+            <line key={lat}
+              x1={0} y1={toY(lat)} x2={W} y2={toY(lat)}
               stroke="currentColor"
-              strokeOpacity={0.25}
-              strokeWidth={0.9}
-              strokeLinejoin="round"
+              strokeWidth={lat === 0 ? 0.7 : 0.25}
+              opacity={lat === 0 ? 0.3 : 0.12}
+            />
+          ))}
+          {lonLines.map(lon => (
+            <line key={lon}
+              x1={toX(lon)} y1={0} x2={toX(lon)} y2={H}
+              stroke="currentColor"
+              strokeWidth={lon === 0 ? 0.7 : 0.25}
+              opacity={lon === 0 ? 0.3 : 0.12}
             />
           ))}
 
+          {/* Countries — proper Natural Earth shapes */}
+          <path
+            d={landPath}
+            fill="currentColor"
+            fillOpacity={0.1}
+            stroke="currentColor"
+            strokeOpacity={0.28}
+            strokeWidth={0.35}
+            strokeLinejoin="round"
+          />
+
           {/* Latitude tick labels */}
           {LAT_TICKS.map(lat => (
-            <text key={`tick-${lat}`}
+            <text key={lat}
               x={6} y={toY(lat) + 4}
-              fontSize={9}
+              fontSize={8}
               fill="currentColor"
-              opacity={0.3}
+              opacity={0.28}
               fontFamily="monospace"
-              letterSpacing={0}
             >
               {lat > 0 ? `${lat}°N` : lat < 0 ? `${Math.abs(lat)}°S` : '0°'}
-            </text>
-          ))}
-
-          {/* Region background labels */}
-          {REGION_LABELS.map(r => (
-            <text key={r.label}
-              x={toX(r.lon)} y={toY(r.lat)}
-              textAnchor="middle"
-              fontSize={9}
-              letterSpacing={2.5}
-              fill="currentColor"
-              opacity={0.12}
-              fontFamily="sans-serif"
-            >
-              {r.label}
             </text>
           ))}
 
@@ -208,15 +139,17 @@ export default function ExhibitionMap() {
             const x = toX(city.lon)
             const y = toY(city.lat)
             const isHov = hovered?.name === city.name
+            const toggle = (e) => { e.stopPropagation(); setHovered(isHov ? null : { ...city, x, y }) }
             return (
               <g key={city.name}
                 onMouseEnter={() => setHovered({ ...city, x, y })}
                 onMouseLeave={() => setHovered(null)}
-                style={{ cursor: 'default' }}
+                onClick={toggle}
+                style={{ cursor: 'pointer' }}
               >
                 <circle cx={x} cy={y} r={18} fill="transparent" />
                 <circle cx={x} cy={y} r={isHov ? 5 : 3.5}
-                  fill="currentColor" opacity={isHov ? 0.65 : 0.45}
+                  fill="currentColor" opacity={isHov ? 0.75 : 0.5}
                   style={{ transition: 'r 0.2s' }}
                 />
               </g>
@@ -228,20 +161,22 @@ export default function ExhibitionMap() {
             const x = toX(city.lon)
             const y = toY(city.lat)
             const isHov = hovered?.name === city.name
+            const toggle = (e) => { e.stopPropagation(); setHovered(isHov ? null : { ...city, x, y }) }
             return (
               <g key={city.name}
                 onMouseEnter={() => setHovered({ ...city, x, y })}
                 onMouseLeave={() => setHovered(null)}
-                style={{ cursor: 'default' }}
+                onClick={toggle}
+                style={{ cursor: 'pointer' }}
               >
                 <circle cx={x} cy={y} r={20} fill="transparent" />
                 <circle cx={x} cy={y} r={isHov ? 11 : 8}
                   fill="none" stroke="currentColor" strokeWidth={1}
-                  opacity={isHov ? 0.6 : 0.35}
+                  opacity={isHov ? 0.7 : 0.4}
                   style={{ transition: 'r 0.2s' }}
                 />
                 <circle cx={x} cy={y} r={isHov ? 5.5 : 4}
-                  fill="currentColor" opacity={isHov ? 1 : 0.8}
+                  fill="currentColor" opacity={isHov ? 1 : 0.85}
                   style={{ transition: 'r 0.2s' }}
                 />
               </g>
@@ -252,18 +187,16 @@ export default function ExhibitionMap() {
           <g
             onMouseEnter={() => setHovered({ ...HOME, x: hx, y: hy })}
             onMouseLeave={() => setHovered(null)}
-            style={{ cursor: 'default' }}
+            onClick={(e) => { e.stopPropagation(); setHovered(hovered?.name === HOME.name ? null : { ...HOME, x: hx, y: hy }) }}
+            style={{ cursor: 'pointer' }}
           >
             <circle cx={hx} cy={hy} r={22} fill="transparent" />
-            {/* SVG-native pulse ring */}
             <circle cx={hx} cy={hy} r={8} fill="none" stroke="currentColor" strokeWidth={1.5}>
               <animate attributeName="r" values="8;24;24" dur="2.2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0.7;0;0" dur="2.2s" repeatCount="indefinite" />
             </circle>
             <circle cx={hx} cy={hy} r={7} fill="currentColor" opacity={0.9} />
-            <circle cx={hx} cy={hy} r={3} fill="currentColor"
-              style={{ mixBlendMode: 'overlay' }}
-            />
+            <circle cx={hx} cy={hy} r={3} fill="currentColor" style={{ mixBlendMode: 'overlay' }} />
           </g>
 
           {/* Hover tooltip */}
@@ -278,7 +211,6 @@ export default function ExhibitionMap() {
                   fill="currentColor" opacity={0.92} />
                 <text x={tipX + 10} y={tipY + 17}
                   fontSize={12} fontWeight={500}
-                  fill="currentColor" className="text-base-100"
                   fontFamily="sans-serif"
                   style={{ fill: 'var(--fallback-b1,oklch(var(--b1)))' }}
                 >
@@ -316,7 +248,7 @@ export default function ExhibitionMap() {
         </div>
         <div className="flex items-center gap-2">
           <svg width="14" height="14" viewBox="0 0 14 14">
-            <circle cx="7" cy="7" r="4" fill="currentColor" opacity="0.45" />
+            <circle cx="7" cy="7" r="4" fill="currentColor" opacity="0.5" />
           </svg>
           Exposición en México
         </div>

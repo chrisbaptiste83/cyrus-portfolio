@@ -38,8 +38,10 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
   )
 
   // Get images for showcase + hero
+  // Prefer student_work images for hero (where the eye-painting scene lives)
   const arenaImages = taggedMedia.filter(m => m.media_type === 'image').slice(0, 3)
-  const heroImage = arenaImages[0]?.file_url || artworks[0]?.image || null
+  const studentImages = taggedMedia.filter(m => m.media_type === 'image' && m.category === 'student_work')
+  const heroImage = studentImages[0]?.file_url || arenaImages[0]?.file_url || artworks[0]?.image || null
 
   // Mix artist artworks and Arena Negra media for the showcase
   const showcaseItems = [
@@ -64,7 +66,13 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
         {/* Full-bleed background image */}
         {heroImage && (
           <div className="absolute inset-0">
-            <img src={heroImage} alt="" className="w-full h-full object-cover opacity-55" aria-hidden="true" />
+            <img
+              src={heroImage}
+              alt=""
+              className="w-full h-full object-cover opacity-50"
+              style={{ objectPosition: '50% 25%' }}
+              aria-hidden="true"
+            />
           </div>
         )}
 
@@ -88,7 +96,7 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
               <p className="text-xs tracking-[0.35em] uppercase text-white/50">Galería &amp; Escuela de Arte</p>
             </div>
 
-            <h1 className="text-7xl sm:text-8xl md:text-9xl font-light tracking-tight text-white leading-[0.88] mb-8">
+            <h1 className="text-6xl sm:text-8xl md:text-9xl font-light tracking-tight text-white leading-[0.88] mb-8">
               Arena<br />
               <span className="italic">Negra</span>
             </h1>
@@ -171,7 +179,7 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
 
             {/* Mixed Media Display - Artist Work + Arena Negra */}
             <div className="relative">
-              <div className="grid grid-cols-6 grid-rows-4 gap-2 sm:gap-3 h-[400px] sm:h-[500px]">
+              <div className="grid grid-cols-6 grid-rows-4 gap-1.5 sm:gap-3 h-[240px] sm:h-[400px] lg:h-[500px]">
                 {/* Large featured image */}
                 {showcaseItems[0] && (
                   <div
@@ -318,6 +326,7 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
                           className="w-full"
                           controls
                           playsInline
+                          preload="none"
                         />
                       )}
                       {/* Hover Overlay for Images */}
