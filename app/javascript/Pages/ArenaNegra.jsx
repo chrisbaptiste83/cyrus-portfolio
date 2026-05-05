@@ -321,13 +321,15 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
                           className="w-full transition-all duration-500 group-hover:scale-105 group-hover:brightness-110"
                         />
                       ) : (
-                        <video
-                          src={item.file_url}
-                          className="w-full"
-                          controls
-                          playsInline
-                          preload="none"
-                        />
+                        <div className="aspect-video bg-base-300">
+                          <video
+                            src={item.file_url}
+                            className="w-full h-full"
+                            controls
+                            playsInline
+                            preload="none"
+                          />
+                        </div>
                       )}
                       {/* Hover Overlay for Images */}
                       {item.media_type === 'image' && (
