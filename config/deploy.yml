@@ -8,6 +8,8 @@ servers:
 ssh:
   user: root
 
+deploy_timeout: 120
+
 proxy:
   ssl: true
   host: cyrusbaptiste.com
