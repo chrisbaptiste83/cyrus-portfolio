@@ -62,7 +62,7 @@ class PagesController < ApplicationController
     message = params[:message]&.strip
 
     if [ name, email, message ].all?(&:present?)
-      ContactMailer.message(name: name, email: email, body: message).deliver_later
+      ContactMailer.message(name: name, email: email, body: message).deliver_now
       redirect_to contact_path, notice: "¡Gracias! Tu mensaje ha sido enviado. Te responderé pronto."
     else
       redirect_to contact_path, alert: "Por favor completa todos los campos."
