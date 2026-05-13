@@ -1,5 +1,6 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer utilities {
   .animate-marquee {
@@ -17,5 +18,34 @@
     100% {
       transform: translateX(-50%);
     }
+  }
+
+  /* Scroll-reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-100 { transition-delay: 0.1s; }
+  .reveal-delay-200 { transition-delay: 0.2s; }
+  .reveal-delay-300 { transition-delay: 0.3s; }
+
+  /* Timeline connector */
+  .timeline-line::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: -100%;
+    width: 1px;
+    background: currentColor;
+    opacity: 0.12;
   }
 }

@@ -15,7 +15,10 @@
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.21",
     "@inertiajs/react": "^2.3.12",
+    "@mux/mux-player-react": "^3.13.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   }
 }

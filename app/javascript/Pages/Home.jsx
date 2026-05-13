@@ -1,10 +1,18 @@
 import React from 'react'
 import Layout from './Layout'
-import { Link } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
+import Reveal from '../components/Reveal'
 
 export default function Home({ artist, artworks }) {
   return (
     <Layout>
+      <Head>
+        <title>Cyrus Baptiste — Artist & Educator</title>
+        <meta name="description" content="Cyrus Baptiste — artista y educador basado en Monterrey, México. Exploring identity, race, and tolerance through vibrant colors and bold forms." />
+        <meta property="og:title" content="Cyrus Baptiste — Artist & Educator" />
+        <meta property="og:description" content="Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms." />
+        <meta property="og:image" content="https://cyrusbaptiste.com/images/image1.jpeg" />
+      </Head>
       {/* Hero Section with Artist Photo */}
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
@@ -77,14 +85,14 @@ export default function Home({ artist, artworks }) {
             {artworks.slice(0, 8).map((artwork, index) => (
               <Link
                 key={artwork.id}
-                href="/gallery"
+                href={`/gallery/${artwork.id}`}
                 className={`group relative overflow-hidden bg-base-200 rounded-xl ${
                   index === 0 || index === 5 ? 'md:col-span-2 md:row-span-2' : ''
                 }`}
               >
                 <div className={`aspect-square ${index === 0 || index === 5 ? 'md:aspect-auto md:h-full' : ''}`}>
                   <img
-                    src={artwork.image}
+                    src={artwork.thumbnail || artwork.image}
                     alt={artwork.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:opacity-90"
                     onError={(e) => {
@@ -111,6 +119,7 @@ export default function Home({ artist, artworks }) {
       {/* About Section */}
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
+          <Reveal>
           <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24">
             <div>
               <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">About</p>
@@ -137,12 +146,14 @@ export default function Home({ artist, artworks }) {
               </div>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Arena Negra Section */}
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 bg-base-200/30">
         <div className="max-w-7xl mx-auto">
+          <Reveal>
           <div className="max-w-3xl">
             <p className="text-xs sm:text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">Gallery & Art School</p>
             <Link href="/arena-negra" className="group">
@@ -174,21 +185,32 @@ export default function Home({ artist, artworks }) {
               </a>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Contact CTA */}
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-20 text-center">
+        <Reveal>
         <p className="text-xs sm:text-sm tracking-[0.2em] uppercase text-base-content/40 mb-3 sm:mb-4">Get in touch</p>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-light mb-6 sm:mb-8">Interested in a piece?</h2>
-        <a
-          href={artist.instagram_artist}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-4 border border-base-content/20 hover:bg-base-content hover:text-base-100 transition-all duration-300"
-        >
-          Contact via Instagram
-        </a>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-base-content text-base-100 hover:bg-base-content/90 transition-all duration-300 text-sm"
+          >
+            Send a message
+          </Link>
+          <a
+            href={artist.instagram_artist}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 border border-base-content/20 hover:bg-base-content hover:text-base-100 transition-all duration-300 text-sm"
+          >
+            Contact via Instagram
+          </a>
+        </div>
+        </Reveal>
       </section>
     </Layout>
   )
