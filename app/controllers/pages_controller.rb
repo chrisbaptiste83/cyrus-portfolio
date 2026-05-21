@@ -63,7 +63,6 @@ class PagesController < ApplicationController
     message = params[:message]&.strip
 
     if [ name, email, message ].all?(&:present?)
-      # Note: ContactMailer might need to be created/updated to match this signature
       ContactMailer.message(name: name, email: email, body: message).deliver_now
       redirect_to contact_path, notice: "¡Gracias! Tu mensaje ha sido enviado. Te responderé pronto."
     else
@@ -108,7 +107,6 @@ class PagesController < ApplicationController
       credit:          media.credit,
       file_url:        media.video? ? rails_blob_path(media.file, only_path: true) : imagekit_url(media.file),
       thumbnail_url:   media.video? ? (media.mux_playback_id.present? ? "https://image.mux.com/#{media.mux_playback_id}/thumbnail.jpg?width=800" : nil) : imagekit_thumb(media.file),
-      # Mux fields — nil for images or pre-Mux videos
       mux_playback_id: media.mux_playback_id,
       mux_status:      media.mux_status
     }
