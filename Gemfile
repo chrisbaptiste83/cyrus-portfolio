@@ -77,3 +77,30 @@ end
 gem "devise"
 gem "activeadmin"
 gem "sass-embedded"  # For compiling Active Admin SCSS
+
+# Added from Mux/GCS integration
+# Use PostgreSQL as the database for Active Record in production
+gem "pg", "~> 1.1", groups: [ :production ]
+# gem "image_processing", "~> 1.2"
+# GCS for Active Storage (ImageKit proxies from this bucket)
+gem "google-cloud-storage", "~> 1.53", require: false
+  # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem "brakeman", require: false
+  # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
+  gem "rubocop-rails-omakase", require: false
+  # Testing framework
+  gem "rspec-rails", "~> 7.0"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "shoulda-matchers"
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "simplecov", require: false
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
+  gem "erb-formatter", require: false
+# Mux video streaming
+gem "mux_ruby"
+

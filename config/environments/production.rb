@@ -21,7 +21,7 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files in Google Cloud Storage.
+  # Store uploaded files in GCS; ImageKit proxies from the same bucket for CDN/transforms.
   config.active_storage.service = :google
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.

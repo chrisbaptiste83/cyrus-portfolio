@@ -41,5 +41,9 @@
 # Ignore test coverage reports
 /coverage
 
+# Ignore local development artifacts.
+/.ruby-lsp
+/.codex
+
 .kamal/secrets
 .DS_Store

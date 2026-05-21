@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Mux webhook — register this URL in your Mux dashboard
+  post "mux/webhook", to: "mux_webhooks#receive"
+
   get "manifest"       => "rails/pwa#manifest",       as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 end

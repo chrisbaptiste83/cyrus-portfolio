@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   include Rails.application.routes.url_helpers
+  include ImagekitHelper
 
   ARTIST_DATA = {
     name: "Cyrus Baptiste",
@@ -72,21 +73,14 @@ class PagesController < ApplicationController
   private
 
   def artwork_to_hash(artwork)
-    image_path     = artwork.image.attached? ? rails_blob_path(artwork.image, only_path: true) : nil
-    thumbnail_path = begin
-      artwork.image.attached? ? rails_representation_path(artwork.image.variant(resize_to_limit: [ 800, 1000 ]), only_path: true) : nil
-    rescue
-      image_path
-    end
-
     {
       id: artwork.id,
       title: artwork.title,
       year: artwork.year,
       medium: artwork.medium,
       dimensions: artwork.dimensions,
-      image: image_path,
-      thumbnail: thumbnail_path
+      image: imagekit_url(artwork.image),
+      thumbnail: imagekit_thumb(artwork.image)
     }
   end
 
@@ -104,26 +98,17 @@ class PagesController < ApplicationController
   end
 
   def media_to_hash(media)
-    file_path = media.file.attached? ? rails_blob_path(media.file, only_path: true) : nil
-    thumbnail_path = begin
-      if media.image? && media.file.attached?
-        rails_representation_path(media.file.variant(resize_to_limit: [ 800, 800 ]), only_path: true)
-      else
-        file_path
-      end
-    rescue
-      file_path
-    end
-
     {
-      id: media.id,
-      title: media.title,
-      description: media.description,
-      category: media.category,
-      media_type: media.media_type,
-      credit: media.credit,
-      file_url: file_path,
-      thumbnail_url: thumbnail_path
+      id:              media.id,
+      title:           media.title,
+      description:     media.description,
+      category:        media.category,
+      media_type:      media.media_type,
+      credit:          media.credit,
+      file_url:        media.video? ? rails_blob_path(media.file, only_path: true) : imagekit_url(media.file),
+      thumbnail_url:   media.video? ? (media.mux_playback_id.present? ? "https://image.mux.com/#{media.mux_playback_id}/thumbnail.jpg?width=800" : nil) : imagekit_thumb(media.file),
+      mux_playback_id: media.mux_playback_id,
+      mux_status:      media.mux_status
     }
   end
 end

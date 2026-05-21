@@ -11,7 +11,7 @@ export default function ArtworkShow({ artwork, prev_id, next_id }) {
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`${artwork.title} — Cyrus Baptiste`} />
         <meta property="og:description" content={[artwork.year, artwork.medium, artwork.dimensions].filter(Boolean).join(' · ')} />
-        {artwork.image && <meta property="og:image" content={`https://cyrusbaptiste.com${artwork.image}`} />}
+        {artwork.image && <meta property="og:image" content={artwork.image} />}
       </Head>
 
       <section className="px-4 sm:px-6 lg:px-10 py-12 sm:py-16 lg:py-24">

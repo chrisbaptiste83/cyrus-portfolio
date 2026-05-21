@@ -41,13 +41,12 @@ artworks_data.each do |data|
   end
 end
 
-# Seed Arena Negra gallery media from the project folder
-# These are the actual Arena Negra photos/videos, not artwork images
-arena_negra_folder = Rails.root.join("..", "Arena Negra Gallery Images and Videos")
+# Seed Arena Negra gallery media from Downloads
+downloads_folder = Pathname.new("/Users/christopherbaptiste/Downloads")
 
-if arena_negra_folder.exist?
-  images = Dir[arena_negra_folder.join("PHOTO-*.jpg")].sort
-  videos = Dir[arena_negra_folder.join("VIDEO-*.mp4")].sort
+if downloads_folder.exist?
+  images = Dir[downloads_folder.join("PHOTO-*.jpg")].sort
+  videos = Dir[downloads_folder.join("VIDEO-*.mp4")].sort
 
   images.each_with_index do |path, index|
     filename = File.basename(path)
@@ -85,8 +84,7 @@ if arena_negra_folder.exist?
     end
   end
 else
-  puts "Arena Negra folder not found at #{arena_negra_folder} — skipping gallery media seed"
-  puts "Upload Arena Negra media via the admin panel at /admin"
+  puts "Downloads folder not found — skipping gallery media seed"
 end
 
 puts "Seeding complete!"
