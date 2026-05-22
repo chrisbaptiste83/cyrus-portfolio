@@ -33,6 +33,9 @@ gem "devise"
 gem "activeadmin"
 gem "sass-embedded"
 
+# Structured JSON logging
+gem "lograge"
+
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false

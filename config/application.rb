@@ -23,8 +23,8 @@ module CyrusPortfolio
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Please, add to the `ignore` list any other `lib` subdirectories that
+    # do not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
@@ -38,5 +38,10 @@ module CyrusPortfolio
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Structured JSON logging for production observability
+    config.lograge.enabled = Rails.env.production?
+    config.lograge.formatter = Lograge::Formatters::Json.new
+    config.lograge.logger = ActiveSupport::Logger.new($stdout)
   end
 end

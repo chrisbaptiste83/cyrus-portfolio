@@ -47,3 +47,4 @@
 
 .kamal/secrets
 .DS_Store
+.aider*
