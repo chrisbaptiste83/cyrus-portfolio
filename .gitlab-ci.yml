@@ -1,0 +1,85 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  PROJECT_ID: gcp-dev-sandbox-495101
+  REGION: us-west2
+  SERVICE: cyrus-portfolio
+  IMAGE: us-west2-docker.pkg.dev/gcp-dev-sandbox-495101/app-images/cyrus-portfolio
+
+.gcp_auth: &gcp_auth |
+  echo "$GCP_SA_KEY" | base64 -d > /tmp/sa-key.json
+  gcloud auth activate-service-account --key-file=/tmp/sa-key.json
+  gcloud config set project $PROJECT_ID
+  rm -f /tmp/sa-key.json
+
+# ── Test ──────────────────────────────────────────────────────────────────────
+
+test:
+  stage: test
+  image: ruby:3.4.2-slim
+  services:
+    - postgres:16-alpine
+  variables:
+    POSTGRES_DB: cyrus_portfolio_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    DATABASE_URL: postgresql://postgres:postgres@postgres/cyrus_portfolio_test
+    RAILS_ENV: test
+    BUNDLE_WITHOUT: ""
+  before_script:
+    - apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs git
+    - gem install bundler --no-document
+    - bundle install --jobs 4 --retry 3
+    - bundle exec rails db:schema:load
+  script:
+    - bundle exec rspec --format progress
+    - bundle exec brakeman -q --no-pager
+    - bundle exec bundle-audit check --update
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# ── Build ─────────────────────────────────────────────────────────────────────
+
+build:
+  stage: build
+  image: google/cloud-sdk:slim
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - apt-get install -y docker.io
+    - *gcp_auth
+    - gcloud auth configure-docker us-west2-docker.pkg.dev --quiet
+  script:
+    - docker build -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
+    - docker push $IMAGE:$CI_COMMIT_SHA
+    - docker push $IMAGE:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# ── Deploy ────────────────────────────────────────────────────────────────────
+
+deploy:
+  stage: deploy
+  image: google/cloud-sdk:slim
+  before_script:
+    - *gcp_auth
+  script:
+    - |
+      gcloud run deploy $SERVICE \
+        --image $IMAGE:$CI_COMMIT_SHA \
+        --region $REGION \
+        --project $PROJECT_ID \
+        --service-account cyrus-portfolio-service@${PROJECT_ID}.iam.gserviceaccount.com \
+        --quiet
+  environment:
+    name: production
+    url: https://cyrus-portfolio-936031185147.us-west2.run.app
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
