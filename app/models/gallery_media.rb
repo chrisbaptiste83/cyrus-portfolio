@@ -27,7 +27,7 @@ class GalleryMedia < ApplicationRecord
   scope :videos, -> { where(media_type: :video) }
 
   after_commit :enqueue_mux_upload, on: [ :create, :update ], if: :should_upload_to_mux?
-  before_destroy :cleanup_mux_asset
+  after_commit :enqueue_mux_cleanup, on: :destroy, if: -> { mux_asset_id.present? }
 
   def mux_ready?
     mux_playback_id.present? && mux_status == "ready"
@@ -66,7 +66,7 @@ class GalleryMedia < ApplicationRecord
     MuxUploadJob.perform_later(id)
   end
 
-  def cleanup_mux_asset
-    MuxService.delete_asset(mux_asset_id) if mux_asset_id.present?
+  def enqueue_mux_cleanup
+    MuxAssetDeletionJob.perform_later(mux_asset_id)
   end
 end
