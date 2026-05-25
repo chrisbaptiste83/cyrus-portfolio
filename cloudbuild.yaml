@@ -29,6 +29,8 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--set-secrets'
+      - 'RAILS_MASTER_KEY=rails-master-key:latest'
 
 images:
   - 'us-central1-docker.pkg.dev/fornax-apps/cyrus-portfolio/cyrus-portfolio:$COMMIT_SHA'

@@ -246,13 +246,13 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
 
   const arenaImages  = taggedMedia.filter(m => m.media_type === 'image').slice(0, 3)
   const studentImgs  = taggedMedia.filter(m => m.media_type === 'image' && m.category === 'student_work')
-  const heroImage    = studentImgs[0]?.file_url || arenaImages[0]?.file_url || artworks[0]?.image || null
+  const heroImage    = studentImgs[0]?.file_url || arenaImages[0]?.file_url || artworks?.[0]?.image || null
 
   const showcaseItems = [
     arenaImages[0]  && { type: 'arena',   ...arenaImages[0] },
-    artworks[0]     && { type: 'artwork',  ...artworks[0] },
+    artworks?.[0] && { type: 'artwork',  ...artworks[0] },
     arenaImages[1]  && { type: 'arena',   ...arenaImages[1] },
-    artworks[1]     && { type: 'artwork',  ...artworks[1] },
+    artworks?.[1] && { type: 'artwork',  ...artworks[1] },
     arenaImages[2]  && { type: 'arena',   ...arenaImages[2] },
   ].filter(Boolean)
 
@@ -451,7 +451,7 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
         </div>
         <div className="relative px-4 sm:px-0">
           <div className="flex gap-4 sm:gap-6 animate-marquee hover:pause">
-            {[...artworks, ...artworks].map((artwork, index) => (
+            {[...(artworks || []), ...(artworks || [])].map((artwork, index) => (
               <Link key={`${artwork.id}-${index}`} href={`/gallery/${artwork.id}`} className="flex-shrink-0 group">
                 <div className="w-48 sm:w-64 md:w-72 aspect-[4/5] overflow-hidden rounded-lg sm:rounded-xl bg-base-200">
                   <img src={artwork.image} alt={artwork.title}

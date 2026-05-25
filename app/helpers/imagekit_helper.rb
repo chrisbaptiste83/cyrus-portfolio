@@ -4,7 +4,6 @@ module ImagekitHelper
 
   def imagekit_url(attachment, **transforms)
     return nil if attachment.nil?
-    return nil if IMAGEKIT_ENDPOINT.blank?
 
     key = if attachment.is_a?(String)
             attachment
@@ -16,9 +15,13 @@ module ImagekitHelper
 
     return nil if key.blank?
 
+    if IMAGEKIT_ENDPOINT.blank?
+      # Development fallback: serve directly via Active Storage
+      return attachment.respond_to?(:blob) ? url_for(attachment) : nil rescue nil
+    end
+
     tr = build_transform(transforms)
     tr_segment = tr.present? ? "/tr:#{tr}" : ""
-
     "#{IMAGEKIT_ENDPOINT}#{tr_segment}/#{key}"
   end
 

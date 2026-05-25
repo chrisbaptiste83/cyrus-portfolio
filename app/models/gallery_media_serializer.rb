@@ -24,12 +24,22 @@ class GalleryMediaSerializer
   private
 
   def file_url
-    @media.video? ? rails_blob_path(@media.file, only_path: true) : imagekit_url(@media.file)
+    if @media.video?
+      return "https://stream.mux.com/#{@media.mux_playback_id}.m3u8" if @media.mux_playback_id.present?
+      return nil unless @media.file.attached?
+
+      host = Rails.application.routes.default_url_options[:host] || "localhost:3000"
+      rails_blob_url(@media.file, host: host)
+    else
+      imagekit_url(@media.file)
+    end
   end
 
   def thumbnail_url
     if @media.video?
-      @media.mux_playback_id.present? ? "https://image.mux.com/#{@media.mux_playback_id}/thumbnail.jpg?width=800" : nil
+      if @media.mux_playback_id.present?
+        "https://image.mux.com/#{@media.mux_playback_id}/thumbnail.jpg?width=800"
+      end
     else
       imagekit_thumb(@media.file)
     end
