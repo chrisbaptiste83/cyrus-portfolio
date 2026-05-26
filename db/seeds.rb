@@ -25,19 +25,17 @@ artworks_data = [
 artworks_data.each do |data|
   image_file = data.delete(:image)
   artwork = Artwork.find_or_initialize_by(title: data[:title])
+  artwork.assign_attributes(data)
 
-  if artwork.new_record?
-    artwork.assign_attributes(data)
-    image_path = Rails.root.join("public", "images", image_file)
-    if File.exist?(image_path)
+  image_path = Rails.root.join("public", "images", image_file)
+  if File.exist?(image_path)
+    unless artwork.image.attached?
       artwork.image.attach(io: File.open(image_path), filename: image_file)
-      artwork.save!
-      puts "Created artwork: #{artwork.title}"
-    else
-      puts "Image not found: #{image_path}"
     end
+    artwork.save!
+    puts "#{artwork.new_record? ? 'Created' : 'Updated'} artwork: #{artwork.title}"
   else
-    puts "Artwork already exists: #{artwork.title}"
+    puts "Image not found: #{image_path}"
   end
 end
 
