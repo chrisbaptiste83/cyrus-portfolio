@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: black, lofi;
+}
 
 @layer utilities {
   .animate-marquee {
