@@ -24,6 +24,8 @@ class GalleryMediaSerializer
   private
 
   def file_url
+    return @media.imagekit_url if @media.respond_to?(:imagekit_url) && @media.imagekit_url.present?
+
     if @media.video?
       return "https://stream.mux.com/#{@media.mux_playback_id}.m3u8" if @media.mux_playback_id.present?
       return nil unless @media.file.attached?
@@ -36,6 +38,10 @@ class GalleryMediaSerializer
   end
 
   def thumbnail_url
+    if @media.respond_to?(:imagekit_url) && @media.imagekit_url.present?
+      return @media.image? ? "#{@media.imagekit_url}?tr=w-800,h-800,fo-auto" : @media.imagekit_url
+    end
+
     if @media.video?
       if @media.mux_playback_id.present?
         "https://image.mux.com/#{@media.mux_playback_id}/thumbnail.jpg?width=800"

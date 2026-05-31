@@ -3,6 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Pages', type: :request do
+  describe 'GET /up' do
+    it 'returns http success without host authorization checks' do
+      get '/up'
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe 'GET /' do
     it 'returns http success' do
       get root_path

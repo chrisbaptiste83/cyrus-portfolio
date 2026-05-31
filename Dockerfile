@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# This Dockerfile is designed for production, not development. Build and run by hand:
+# This Dockerfile is designed for production on Google Cloud Run. Build and run locally with:
 # docker build -t cyrus_portfolio .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name cyrus_portfolio cyrus_portfolio
+# docker run -d -p 8080:80 -e PORT=80 -e RAILS_MASTER_KEY=<value from config/master.key> --name cyrus_portfolio cyrus_portfolio
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
@@ -49,8 +49,8 @@ RUN bundle install && \
     bundle exec bootsnap precompile --gemfile
 
 # Install node modules
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Copy application code
 COPY . .

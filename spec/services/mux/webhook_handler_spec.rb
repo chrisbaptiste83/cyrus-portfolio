@@ -12,7 +12,7 @@ RSpec.describe Mux::WebhookHandler do
   before do
     allow(GalleryMedia).to receive(:find_by).with(mux_asset_id: "mux-asset-123").and_return(media)
     allow(Mux::Client).to receive(:webhook_secret).and_return("secret")
-    allow(MuxRuby::Webhooks).to receive(:verify_header)
+    allow(Mux::WebhookVerifier).to receive(:verify!)
     allow(Rails.logger).to receive(:info)
     allow(Rails.logger).to receive(:error)
     allow(Rails.logger).to receive(:warn)
@@ -72,7 +72,7 @@ RSpec.describe Mux::WebhookHandler do
       let(:type) { "video.asset.ready" }
 
       before do
-        allow(MuxRuby::Webhooks).to receive(:verify_header).and_raise(MuxRuby::WebhookVerificationError)
+        allow(Mux::WebhookVerifier).to receive(:verify!).and_raise(Mux::WebhookVerificationError)
       end
 
       it "returns false" do
@@ -88,7 +88,7 @@ RSpec.describe Mux::WebhookHandler do
       end
 
       it "skips verification and processes the event" do
-        expect(MuxRuby::Webhooks).not_to receive(:verify_header)
+        expect(Mux::WebhookVerifier).not_to receive(:verify!)
         expect(media).to receive(:update_columns)
         expect(described_class.call(payload, signature_header)).to be true
       end

@@ -73,7 +73,7 @@ RSpec.describe GalleryMedia, type: :model do
 
   describe '.ransackable_attributes' do
     it 'returns searchable attributes' do
-      expected = %w[category created_at credit description id media_type position title updated_at]
+      expected = %w[category created_at credit description id media_type mux_asset_id mux_playback_id mux_status position title updated_at]
       expect(GalleryMedia.ransackable_attributes).to match_array(expected)
     end
   end
