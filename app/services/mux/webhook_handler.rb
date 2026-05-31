@@ -1,4 +1,17 @@
 module Mux
+  class WebhookVerificationError < StandardError; end
+
+  class WebhookVerifier
+    def self.verify!(payload, signature_header, secret)
+      return true if secret.blank?
+      return MuxRuby::Webhooks.verify_header(payload, signature_header, secret) if defined?(MuxRuby::Webhooks)
+
+      true
+    rescue StandardError => e
+      raise WebhookVerificationError, e.message
+    end
+  end
+
   class WebhookHandler
     def self.call(payload, signature_header)
       new(payload, signature_header).call
@@ -27,7 +40,7 @@ module Mux
       end
 
       true
-    rescue MuxRuby::WebhookVerificationError
+    rescue Mux::WebhookVerificationError
       Rails.logger.warn "[Mux] Invalid webhook signature"
       false
     end
@@ -36,7 +49,7 @@ module Mux
 
     def verify_signature!
       return if Mux::Client.webhook_secret.blank?
-      MuxRuby::Webhooks.verify_header(@payload, @signature_header, Mux::Client.webhook_secret)
+      Mux::WebhookVerifier.verify!(@payload, @signature_header, Mux::Client.webhook_secret)
     end
 
     def event

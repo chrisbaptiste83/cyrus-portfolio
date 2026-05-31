@@ -5,15 +5,10 @@ stages:
 
 variables:
   PROJECT_ID: gcp-dev-sandbox-495101
-  REGION: us-west2
-  SERVICE: cyrus-portfolio
-  IMAGE: us-west2-docker.pkg.dev/gcp-dev-sandbox-495101/app-images/cyrus-portfolio
-
-.gcp_auth: &gcp_auth |
-  echo "$GCP_SA_KEY" | base64 -d > /tmp/sa-key.json
-  gcloud auth activate-service-account --key-file=/tmp/sa-key.json
-  gcloud config set project $PROJECT_ID
-  rm -f /tmp/sa-key.json
+  REGION: us-central1
+  SERVICE: cyrus-portfolio-prod
+  IMAGE: us-central1-docker.pkg.dev/fornax-apps/cyrus-portfolio
+  RAILS_MASTER_KEY_SECRET: cyrus-portfolio-rails-master-key-prod
 
 # ── Test ──────────────────────────────────────────────────────────────────────
 
@@ -52,12 +47,23 @@ build:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
+  id_tokens:
+    GITLAB_ID_TOKEN:
+      aud: ${GCP_WORKLOAD_IDENTITY_PROVIDER}
   before_script:
-    - apt-get install -y docker.io
-    - *gcp_auth
-    - gcloud auth configure-docker us-west2-docker.pkg.dev --quiet
+    - apt-get update -qq && apt-get install -y docker.io
+    - echo "$GITLAB_ID_TOKEN" > /tmp/oidc-token
+    - gcloud iam workload-identity-pools create-cred-config ${GCP_WORKLOAD_IDENTITY_PROVIDER}
+      --output-file=/tmp/cred-config.json
+      --credential-source-file=/tmp/oidc-token
+      --credential-source-type=text
+    - gcloud auth login --cred-file=/tmp/cred-config.json
+    - gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+    - gcloud config set project $PROJECT_ID
+    - gcloud secrets versions access latest --secret=${RAILS_MASTER_KEY_SECRET} > /tmp/rails_master_key
   script:
-    - docker build -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
+    - export DOCKER_BUILDKIT=1
+    - docker build --secret id=rails_master_key,src=/tmp/rails_master_key -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
     - docker push $IMAGE:$CI_COMMIT_SHA
     - docker push $IMAGE:latest
   rules:
@@ -68,8 +74,17 @@ build:
 deploy:
   stage: deploy
   image: google/cloud-sdk:slim
+  id_tokens:
+    GITLAB_ID_TOKEN:
+      aud: ${GCP_WORKLOAD_IDENTITY_PROVIDER}
   before_script:
-    - *gcp_auth
+    - echo "$GITLAB_ID_TOKEN" > /tmp/oidc-token
+    - gcloud iam workload-identity-pools create-cred-config ${GCP_WORKLOAD_IDENTITY_PROVIDER}
+      --output-file=/tmp/cred-config.json
+      --credential-source-file=/tmp/oidc-token
+      --credential-source-type=text
+    - gcloud auth login --cred-file=/tmp/cred-config.json
+    - gcloud config set project $PROJECT_ID
   script:
     - |
       gcloud run deploy $SERVICE \
@@ -77,9 +92,10 @@ deploy:
         --region $REGION \
         --project $PROJECT_ID \
         --service-account cyrus-portfolio-service@${PROJECT_ID}.iam.gserviceaccount.com \
+        --set-secrets=RAILS_MASTER_KEY=${RAILS_MASTER_KEY_SECRET}:latest \
         --quiet
   environment:
     name: production
-    url: https://cyrus-portfolio-936031185147.us-west2.run.app
+    url: ${PRODUCTION_URL}
   rules:
     - if: $CI_COMMIT_BRANCH == "main"

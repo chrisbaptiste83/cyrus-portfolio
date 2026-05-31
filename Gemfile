@@ -36,6 +36,9 @@ gem "sass-embedded"
 # Structured JSON logging
 gem "lograge"
 
+# Rate limiting and throttling
+gem "rack-attack"
+
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "brakeman", require: false
