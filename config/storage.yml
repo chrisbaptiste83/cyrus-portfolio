@@ -8,6 +8,6 @@ local:
 
 google:
   service: GCS
-  project: gcp-dev-sandbox-495101
-  bucket: cyrus-portfolio-prod-bucket
+  project: trinitas-forge
+  bucket: cyrus-portfolio-prod-storage
   iam: true
