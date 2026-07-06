@@ -3,10 +3,10 @@ module Mux
 
   class WebhookVerifier
     def self.verify!(payload, signature_header, secret)
-      return true if secret.blank?
-      return MuxRuby::Webhooks.verify_header(payload, signature_header, secret) if defined?(MuxRuby::Webhooks)
+      raise WebhookVerificationError, "MUX_WEBHOOK_SECRET is not configured" if secret.blank?
+      raise WebhookVerificationError, "MuxRuby::Webhooks is not available" unless defined?(MuxRuby::Webhooks)
 
-      true
+      MuxRuby::Webhooks.verify_header(payload, signature_header, secret)
     rescue StandardError => e
       raise WebhookVerificationError, e.message
     end
@@ -48,7 +48,6 @@ module Mux
     private
 
     def verify_signature!
-      return if Mux::Client.webhook_secret.blank?
       Mux::WebhookVerifier.verify!(@payload, @signature_header, Mux::Client.webhook_secret)
     end
 

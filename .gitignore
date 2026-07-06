@@ -48,3 +48,4 @@
 .kamal/secrets
 .DS_Store
 .aider*
+public/videos/*.MP4

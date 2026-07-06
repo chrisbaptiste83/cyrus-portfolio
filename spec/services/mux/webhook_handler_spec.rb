@@ -85,12 +85,12 @@ RSpec.describe Mux::WebhookHandler do
 
       before do
         allow(Mux::Client).to receive(:webhook_secret).and_return(nil)
+        allow(Mux::WebhookVerifier).to receive(:verify!).and_call_original
       end
 
-      it "skips verification and processes the event" do
-        expect(Mux::WebhookVerifier).not_to receive(:verify!)
-        expect(media).to receive(:update_columns)
-        expect(described_class.call(payload, signature_header)).to be true
+      it "rejects the webhook instead of silently accepting it" do
+        expect(media).not_to receive(:update_columns)
+        expect(described_class.call(payload, signature_header)).to be false
       end
     end
   end

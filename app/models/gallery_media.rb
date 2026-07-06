@@ -1,7 +1,7 @@
 class GalleryMedia < ApplicationRecord
   self.table_name = "gallery_media"
 
-  has_one_attached :file
+  has_one_attached :file, dependent: :purge_later
 
   enum :category, {
     student_work: 0,
