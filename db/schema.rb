@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_30_002154) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_05_174638) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_30_002154) do
     t.string "mux_asset_id"
     t.string "mux_playback_id"
     t.string "mux_status"
+    t.index ["category"], name: "index_gallery_media_on_category"
+    t.index ["media_type"], name: "index_gallery_media_on_media_type"
     t.index ["position"], name: "index_gallery_media_on_position"
   end
 
