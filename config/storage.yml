@@ -16,10 +16,10 @@ local:
 
 google:
   service: GCS
-  project: gcp-dev-sandbox-495101
-  bucket: cyrus-portfolio-prod-bucket
+  project: trinitas-forge
+  bucket: cyrus-portfolio-prod-storage
   iam: true
-  gsa_email: cyrus-portfolio-service@gcp-dev-sandbox-495101.iam.gserviceaccount.com
+  gsa_email: cyrus-portfolio-service@trinitas-forge.iam.gserviceaccount.com
 
 # Use bin/rails credentials:edit to set the Azure Storage secret (as azure_storage:storage_access_key)
 # microsoft:
