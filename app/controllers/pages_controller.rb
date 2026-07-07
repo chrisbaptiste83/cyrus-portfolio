@@ -29,13 +29,13 @@ class PagesController < ApplicationController
     record = Artwork.find_by(id: params[:id])
     return redirect_to gallery_path unless record
 
-    all = Artwork.all.to_a
-    idx = all.index(record)
+    prev_artwork = Artwork.where("position < ?", record.position).order(position: :desc).first
+    next_artwork = Artwork.where("position > ?", record.position).order(:position).first
 
     render inertia: "ArtworkShow", props: {
       artwork: artwork_to_hash(record),
-      prev_id: idx > 0 ? all[idx - 1].id : nil,
-      next_id: idx < all.length - 1 ? all[idx + 1].id : nil
+      prev_id: prev_artwork&.id,
+      next_id: next_artwork&.id
     }
   end
 
