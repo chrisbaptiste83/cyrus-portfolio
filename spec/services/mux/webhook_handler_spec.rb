@@ -9,8 +9,11 @@ RSpec.describe Mux::WebhookHandler do
     instance_double(GalleryMedia, id: 42, update_columns: true)
   end
 
+  let(:media_relation) { double("ActiveRecord::Relation") }
+
   before do
-    allow(GalleryMedia).to receive(:find_by).with(mux_asset_id: "mux-asset-123").and_return(media)
+    allow(GalleryMedia).to receive(:lock).and_return(media_relation)
+    allow(media_relation).to receive(:find_by).with(mux_asset_id: "mux-asset-123").and_return(media)
     allow(Mux::Client).to receive(:webhook_secret).and_return("secret")
     allow(Mux::WebhookVerifier).to receive(:verify!)
     allow(Rails.logger).to receive(:info)
@@ -60,7 +63,7 @@ RSpec.describe Mux::WebhookHandler do
       let(:type) { "video.asset.ready" }
 
       before do
-        allow(GalleryMedia).to receive(:find_by).with(mux_asset_id: "mux-asset-123").and_return(nil)
+        allow(media_relation).to receive(:find_by).with(mux_asset_id: "mux-asset-123").and_return(nil)
       end
 
       it "returns false" do

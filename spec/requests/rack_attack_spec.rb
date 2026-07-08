@@ -29,15 +29,15 @@ RSpec.describe "Rack::Attack" do
   end
 
   describe "POST /admin_users/sign_in" do
-    it "allows up to 5 attempts per minute" do
-      5.times do
+    it "allows up to 10 attempts per minute" do
+      10.times do
         post "/admin_users/sign_in"
         expect(response).not_to have_http_status(:too_many_requests)
       end
     end
 
-    it "throttles the 6th attempt" do
-      5.times { post "/admin_users/sign_in" }
+    it "throttles the 11th attempt" do
+      10.times { post "/admin_users/sign_in" }
       post "/admin_users/sign_in"
       expect(response).to have_http_status(:too_many_requests)
     end

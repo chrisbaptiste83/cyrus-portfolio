@@ -78,8 +78,10 @@ RSpec.describe Mux::Uploader do
         allow(Rails.logger).to receive(:error)
       end
 
-      it "logs the error and returns nil" do
-        expect(described_class.call(media)).to be_nil
+      it "logs the error and re-raises" do
+        expect {
+          described_class.call(media)
+        }.to raise_error(StandardError, "Mux error")
         expect(Rails.logger).to have_received(:error).with("[Mux] Upload failed for GalleryMedia#42: Mux error")
       end
     end

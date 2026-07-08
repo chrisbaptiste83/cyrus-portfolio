@@ -26,8 +26,10 @@ RSpec.describe Mux::AssetDeleter do
         allow(Rails.logger).to receive(:error)
       end
 
-      it "logs the error" do
-        described_class.call("mux-asset-123")
+      it "logs the error and re-raises" do
+        expect {
+          described_class.call("mux-asset-123")
+        }.to raise_error(StandardError, "Mux error")
         expect(Rails.logger).to have_received(:error).with("[Mux] Delete failed for asset mux-asset-123: Mux error")
       end
     end
