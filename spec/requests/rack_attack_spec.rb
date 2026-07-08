@@ -27,4 +27,41 @@ RSpec.describe "Rack::Attack" do
       end
     end
   end
+
+  describe "POST /admin_users/sign_in" do
+    it "allows up to 5 attempts per minute" do
+      5.times do
+        post "/admin_users/sign_in"
+        expect(response).not_to have_http_status(:too_many_requests)
+      end
+    end
+
+    it "throttles the 6th attempt" do
+      5.times { post "/admin_users/sign_in" }
+      post "/admin_users/sign_in"
+      expect(response).to have_http_status(:too_many_requests)
+    end
+  end
+
+  describe "General IP Throttling" do
+    it "allows up to 100 requests per minute" do
+      100.times do
+        get "/"
+        expect(response).not_to have_http_status(:too_many_requests)
+      end
+    end
+
+    it "throttles the 101st request" do
+      100.times { get "/" }
+      get "/"
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
+    it "does not throttle the health check endpoint /up" do
+      105.times do
+        get "/up"
+        expect(response).not_to have_http_status(:too_many_requests)
+      end
+    end
+  end
 end
