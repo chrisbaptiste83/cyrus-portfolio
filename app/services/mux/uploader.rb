@@ -12,13 +12,15 @@ module Mux
       return unless @media.video? && @media.file.attached?
       return if @media.mux_asset_id.present?
 
-      asset = client.create_asset(
-        MuxRuby::CreateAssetRequest.new(
-          input: [MuxRuby::InputSettings.new(url: file_url)],
-          playback_policy: [MuxRuby::PlaybackPolicy::PUBLIC],
-          mp4_support: "standard"
+      asset = Timeout.timeout(30) do
+        client.create_asset(
+          MuxRuby::CreateAssetRequest.new(
+            input: [MuxRuby::InputSettings.new(url: file_url)],
+            playback_policy: [MuxRuby::PlaybackPolicy::PUBLIC],
+            mp4_support: "standard"
+          )
         )
-      )
+      end
 
       @media.update_columns(
         mux_asset_id: asset.data.id,

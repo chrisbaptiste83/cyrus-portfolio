@@ -27,16 +27,18 @@ module Mux
 
       Rails.logger.info "[Mux] Webhook: #{type} for asset #{data[:id]}"
 
-      media = GalleryMedia.find_by(mux_asset_id: data[:id])
-      return false unless media
+      ActiveRecord::Base.transaction do
+        media = GalleryMedia.lock.find_by(mux_asset_id: data[:id])
+        return false unless media
 
-      case type
-      when "video.asset.ready"
-        handle_ready(media)
-      when "video.asset.errored"
-        handle_error(media)
-      when "video.asset.deleted"
-        handle_deleted(media)
+        case type
+        when "video.asset.ready"
+          handle_ready(media)
+        when "video.asset.errored"
+          handle_error(media)
+        when "video.asset.deleted"
+          handle_deleted(media)
+        end
       end
 
       true

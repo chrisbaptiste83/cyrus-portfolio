@@ -10,7 +10,9 @@ module Mux
 
     def call
       return if @mux_asset_id.blank?
-      Mux::Client.build.delete_asset(@mux_asset_id)
+      Timeout.timeout(30) do
+        Mux::Client.build.delete_asset(@mux_asset_id)
+      end
     rescue => e
       # Log then re-raise -- MuxAssetDeletionJob has no rescue of its own,
       # so swallowing this meant a failed delete just vanished: no retry,

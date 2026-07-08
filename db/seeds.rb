@@ -39,8 +39,8 @@ artworks_data.each do |data|
   end
 end
 
-# Seed Arena Negra gallery media from Downloads
-downloads_folder = Pathname.new("/Users/christopherbaptiste/Downloads")
+# Seed Arena Negra gallery media from configurable path
+downloads_folder = Pathname.new(ENV.fetch("SEED_MEDIA_PATH", Rails.root.join("storage", "seed_media")))
 
 if downloads_folder.exist?
   images = Dir[downloads_folder.join("PHOTO-*.jpg")].sort
