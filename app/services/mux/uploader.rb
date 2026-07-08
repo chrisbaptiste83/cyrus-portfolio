@@ -27,8 +27,12 @@ module Mux
 
       asset.data.id
     rescue => e
+      # Log then re-raise: swallowing this here meant MuxUploadJob's own
+      # rescue (which marks the media errored) never fired, and Solid Queue
+      # never saw a failure to surface or retry -- uploads that failed just
+      # silently left the record stuck with no operator visibility.
       Rails.logger.error "[Mux] Upload failed for GalleryMedia##{@media.id}: #{e.message}"
-      nil
+      raise
     end
 
     private
