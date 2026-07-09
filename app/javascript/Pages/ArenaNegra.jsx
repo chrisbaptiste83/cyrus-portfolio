@@ -138,10 +138,6 @@ function MediaCard({ item, onOpen }) {
         )}
       </div>
 
-      {/* Title below card */}
-      {item.title && (
-        <p className="mt-2 text-xs text-base-content/50 truncate px-0.5">{item.title}</p>
-      )}
     </div>
   )
 }
@@ -195,11 +191,8 @@ function Lightbox({ item, onClose }) {
         )}
 
         {/* Caption */}
-        {(item.title || item.credit || item.description) && (
+        {(item.credit || item.description) && (
           <div className="mt-4 text-center space-y-1">
-            {item.title && (
-              <p className="text-white font-medium text-sm tracking-wide">{item.title}</p>
-            )}
             {item.credit && (
               <p className="text-white/50 text-xs">Por: {item.credit}</p>
             )}
