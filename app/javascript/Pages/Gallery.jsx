@@ -34,9 +34,9 @@ export default function Gallery({ artworks }) {
 
       {/* Header */}
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24 text-center">
-        <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Portfolio</p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light">Gallery</h1>
-        <p className="mt-4 text-base-content/40 text-sm tabular-nums">
+        <p className="font-space text-xs sm:text-sm tracking-[0.25em] uppercase text-base-content/40 mb-3 sm:mb-4">Portfolio</p>
+        <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal">Gallery</h1>
+        <p className="font-space mt-4 text-base-content/40 text-xs tracking-widest uppercase tabular-nums">
           {filterYear ? `${filtered.length} work${filtered.length !== 1 ? 's' : ''} · ${filterYear}` : `${artworks.length} works`}
         </p>
       </section>
@@ -94,14 +94,23 @@ export default function Gallery({ artworks }) {
                   </div>
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                    {/* Floating pill badge */}
+                    <div className="absolute top-4 right-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                      <span className="font-space inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20 text-[11px] tracking-widest uppercase shadow-lg font-medium">
+                        Explorar
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 17L17 7M17 7H7M17 7V17" />
+                        </svg>
+                      </span>
+                    </div>
                     <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                      <p className="text-white text-sm font-light leading-snug">{artwork.title}</p>
-                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        <span className="text-white/60 text-xs">{artwork.year}</span>
+                      <p className="font-cormorant text-white text-lg font-medium leading-snug">{artwork.title}</p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="font-space text-white/70 text-xs">{artwork.year}</span>
                         {artwork.medium && (
                           <>
                             <span className="text-white/30 text-xs">·</span>
-                            <span className="text-white/50 text-xs line-clamp-1">{artwork.medium}</span>
+                            <span className="text-white/60 text-xs line-clamp-1">{artwork.medium}</span>
                           </>
                         )}
                       </div>
@@ -109,8 +118,8 @@ export default function Gallery({ artworks }) {
                   </div>
                 </div>
                 <div className="mt-3 sm:mt-4 space-y-1">
-                  <h3 className="text-sm sm:text-base font-medium group-hover:opacity-70 transition-opacity">{artwork.title}</h3>
-                  <p className="text-sm text-base-content/50">{artwork.year}</p>
+                  <h3 className="font-cormorant text-base sm:text-lg font-semibold group-hover:opacity-70 transition-opacity">{artwork.title}</h3>
+                  <p className="font-space text-xs text-base-content/50 tracking-wider uppercase">{artwork.year}</p>
                 </div>
               </div>
             ))}

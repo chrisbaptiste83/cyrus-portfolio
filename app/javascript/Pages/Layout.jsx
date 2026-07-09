@@ -20,12 +20,20 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="min-h-full bg-base-100">
+    <div className="min-h-full bg-base-100 relative">
+      {/* Subtle Editorial Film Grain Noise Overlay */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-[9999] opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+        }}
+      />
+
       {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-base-100/90 backdrop-blur-sm border-b border-base-content/5">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-base-100/90 backdrop-blur-md border-b border-base-content/5">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-lg sm:text-xl font-semibold tracking-tight hover:opacity-70 transition-opacity">
+            <Link href="/" className="font-cormorant text-xl sm:text-2xl font-semibold tracking-wide hover:opacity-70 transition-opacity">
               Cyrus Baptiste
             </Link>
 

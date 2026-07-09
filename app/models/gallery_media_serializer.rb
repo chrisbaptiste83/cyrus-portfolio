@@ -33,7 +33,7 @@ class GalleryMediaSerializer
       host = Rails.application.routes.default_url_options[:host] || "localhost:3000"
       rails_blob_url(@media.file, host: host)
     else
-      imagekit_url(@media.file)
+      imagekit_url(@media.file) || (@media.file.attached? ? rails_blob_path(@media.file, only_path: true) : nil)
     end
   end
 
@@ -47,7 +47,7 @@ class GalleryMediaSerializer
         "https://image.mux.com/#{@media.mux_playback_id}/thumbnail.jpg?width=800"
       end
     else
-      imagekit_thumb(@media.file)
+      imagekit_thumb(@media.file) || (@media.file.attached? ? rails_blob_path(@media.file, only_path: true) : nil)
     end
   end
 end

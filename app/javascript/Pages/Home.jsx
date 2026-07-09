@@ -30,10 +30,10 @@ export default function Home({ artist, artworks }) {
 
             {/* Hero Text */}
             <div className="flex-1">
-              <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">
+              <p className="font-space text-xs sm:text-sm tracking-[0.25em] uppercase text-base-content/40 mb-3 sm:mb-4">
                 Artist & Educator
               </p>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-4 sm:mb-6">
+              <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight mb-4 sm:mb-6">
                 {artist.name}
               </h1>
               <p className="text-base text-base-content/60 max-w-xl leading-relaxed mb-6">
@@ -70,14 +70,14 @@ export default function Home({ artist, artworks }) {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-8 sm:mb-12">
             <div>
-              <p className="text-sm tracking-[0.2em] uppercase text-base-content/40 mb-2">Portfolio</p>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light">Selected Works</h2>
+              <p className="font-space text-xs sm:text-sm tracking-[0.25em] uppercase text-base-content/40 mb-2">Portfolio</p>
+              <h2 className="font-cormorant text-3xl sm:text-4xl md:text-5xl font-normal">Selected Works</h2>
             </div>
             <Link
               href="/gallery"
-              className="text-sm text-base-content/50 hover:text-base-content transition-colors"
+              className="font-space text-xs tracking-widest uppercase text-base-content/50 hover:text-base-content transition-colors border-b border-base-content/20 pb-0.5"
             >
-              View all
+              View all ↗
             </Link>
           </div>
 
@@ -105,9 +105,14 @@ export default function Home({ artist, artworks }) {
                   </div>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute top-4 right-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="font-space inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20 text-[10px] tracking-widest uppercase shadow font-medium">
+                      Ver ↗
+                    </span>
+                  </div>
                   <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                    <p className="text-white font-medium">{artwork.title}</p>
-                    <p className="text-white/60 text-sm mt-1">{artwork.year}</p>
+                    <p className="font-cormorant text-white text-xl font-medium">{artwork.title}</p>
+                    <p className="font-space text-white/70 text-xs mt-1 tracking-wider uppercase">{artwork.year}</p>
                   </div>
                 </div>
               </Link>

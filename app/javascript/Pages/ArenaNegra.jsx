@@ -115,14 +115,15 @@ function MediaCard({ item, onOpen }) {
               className="w-full transition-all duration-500 group-hover:scale-105 group-hover:brightness-90"
               loading="lazy"
             />
-            {/* Hover zoom icon for images */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white drop-shadow-lg"
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                </svg>
+            {/* Hover frosted pill badge */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500 flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300 transform">
+                <span className="font-space inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/20 text-xs tracking-widest uppercase shadow-xl font-medium">
+                  Ampliar
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                  </svg>
+                </span>
               </div>
             </div>
           </>
@@ -261,6 +262,24 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
         <meta property="og:description" content="Un espacio independiente para el arte en el corazón de Monterrey. Galería, talleres y clases de arte." />
       </Head>
 
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ArtGallery",
+        "name": "Arena Negra",
+        "founder": {
+          "@type": "Person",
+          "name": "Cyrus Baptiste"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Semillero Purísima",
+          "addressLocality": "Monterrey",
+          "addressRegion": "Nuevo León",
+          "addressCountry": "MX"
+        },
+        "description": "Galería y escuela de arte independiente en el centro de Monterrey."
+      }) }} />
+
       {/* ── Hero ── */}
       <section className="relative min-h-screen flex items-end overflow-hidden bg-black">
         {heroImage && (
@@ -283,9 +302,9 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-10 h-px bg-white/40" />
-              <p className="text-xs tracking-[0.35em] uppercase text-white/50">Galería &amp; Escuela de Arte</p>
+              <p className="font-space text-xs tracking-[0.35em] uppercase text-white/50">Galería &amp; Escuela de Arte</p>
             </div>
-            <h1 className="text-6xl sm:text-8xl md:text-9xl font-light tracking-tight text-white leading-[0.88] mb-8">
+            <h1 className="font-cormorant text-6xl sm:text-8xl md:text-9xl font-normal tracking-tight text-white leading-[0.88] mb-8">
               Arena<br /><span className="italic">Negra</span>
             </h1>
             <p className="text-white/50 text-base sm:text-lg max-w-xs sm:max-w-sm mb-10 leading-relaxed">

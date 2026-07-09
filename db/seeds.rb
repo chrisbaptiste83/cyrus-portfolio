@@ -82,7 +82,23 @@ if downloads_folder.exist?
     end
   end
 else
-  puts "Downloads folder not found — skipping gallery media seed"
+  puts "Downloads folder not found — seeding GalleryMedia from public/images fallback..."
+  categories = GalleryMedia.categories.keys
+  Dir[Rails.root.join("public", "images", "*.*")].sort.each_with_index do |path, index|
+    filename = File.basename(path)
+    media = GalleryMedia.find_or_initialize_by(title: "Arena Negra: #{filename}")
+    if media.new_record?
+      media.assign_attributes(
+        description: "Obra y actividad en el espacio Arena Negra",
+        category: categories[index % categories.length],
+        media_type: :image,
+        position: index + 1
+      )
+      media.file.attach(io: File.open(path), filename: filename)
+      media.save!
+      puts "Seeded Arena Negra fallback media: #{filename} (#{media.category})"
+    end
+  end
 end
 
 puts "Seeding complete!"

@@ -1,6 +1,6 @@
 module ImagekitHelper
-  IMAGEKIT_ENDPOINT = Rails.application.credentials.dig(:imagekit, :endpoint) ||
-                      ENV.fetch("IMAGEKIT_ENDPOINT", nil)
+  IMAGEKIT_ENDPOINT = Rails.application.credentials.dig(:imagekit, :endpoint).presence ||
+                      ENV.fetch("IMAGEKIT_ENDPOINT", "https://ik.imagekit.io/mlvnqaq3b")
 
   def imagekit_url(attachment, **transforms)
     return nil if attachment.nil?
@@ -15,9 +15,9 @@ module ImagekitHelper
 
     return nil if key.blank?
 
-    if IMAGEKIT_ENDPOINT.blank? || ENV["DISABLE_IMAGEKIT"] == "true"
-      # Development fallback: serve directly via Active Storage
-      return attachment.respond_to?(:blob) ? url_for(attachment) : nil rescue nil
+    if IMAGEKIT_ENDPOINT.blank? || ENV["DISABLE_IMAGEKIT"] == "true" || (Rails.env.development? && ENV["USE_IMAGEKIT"] != "true")
+      # Development fallback: serve directly via Active Storage / static fallback
+      return nil
     end
 
     tr = build_transform(transforms)
