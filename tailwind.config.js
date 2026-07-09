@@ -10,6 +10,8 @@ module.exports = {
         display: ['"Bebas Neue"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body:    ['Jost', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         sans:    ['Jost', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif:   ['Cinzel', 'Georgia', 'serif'],
+        syne:    ['Syne', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },
