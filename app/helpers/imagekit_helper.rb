@@ -15,7 +15,7 @@ module ImagekitHelper
 
     return nil if key.blank?
 
-    if IMAGEKIT_ENDPOINT.blank?
+    if IMAGEKIT_ENDPOINT.blank? || ENV["DISABLE_IMAGEKIT"] == "true"
       # Development fallback: serve directly via Active Storage
       return attachment.respond_to?(:blob) ? url_for(attachment) : nil rescue nil
     end

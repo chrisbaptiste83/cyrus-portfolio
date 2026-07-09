@@ -237,7 +237,7 @@ export default function Bio({ artist }) {
                   <div className="relative overflow-hidden border border-base-content/10" style={{ paddingBottom: '46%' }}>
                     <iframe
                       title="Arena Negra — Semillero Purísima, Monterrey"
-                      src="https://www.openstreetmap.org/export/embed.html?bbox=-100.3200%2C25.6720%2C-100.2974%2C25.6920&layer=mapnik&marker=25.6820%2C-100.3087"
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=-100.3301%2C25.6656%2C-100.3201%2C25.6756&layer=mapnik&marker=25.6706%2C-100.3251"
                       className="absolute inset-0 w-full h-full"
                       style={{ border: 0 }}
                       loading="lazy"

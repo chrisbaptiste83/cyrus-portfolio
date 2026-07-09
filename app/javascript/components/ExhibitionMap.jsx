@@ -82,23 +82,23 @@ export default function ExhibitionMap() {
           onClick={() => setHovered(null)}
         >
           {/* Ocean */}
-          <rect width={W} height={H} fill="currentColor" fillOpacity={0.03} />
+          <rect width={W} height={H} fill="currentColor" fillOpacity={0.04} />
 
           {/* Grid lines */}
           {latLines.map(lat => (
             <line key={lat}
               x1={0} y1={toY(lat)} x2={W} y2={toY(lat)}
               stroke="currentColor"
-              strokeWidth={lat === 0 ? 0.7 : 0.25}
-              opacity={lat === 0 ? 0.3 : 0.12}
+              strokeWidth={lat === 0 ? 0.8 : 0.30}
+              opacity={lat === 0 ? 0.40 : 0.18}
             />
           ))}
           {lonLines.map(lon => (
             <line key={lon}
               x1={toX(lon)} y1={0} x2={toX(lon)} y2={H}
               stroke="currentColor"
-              strokeWidth={lon === 0 ? 0.7 : 0.25}
-              opacity={lon === 0 ? 0.3 : 0.12}
+              strokeWidth={lon === 0 ? 0.8 : 0.30}
+              opacity={lon === 0 ? 0.40 : 0.18}
             />
           ))}
 
@@ -106,10 +106,10 @@ export default function ExhibitionMap() {
           <path
             d={landPath}
             fill="currentColor"
-            fillOpacity={0.1}
+            fillOpacity={0.18}
             stroke="currentColor"
-            strokeOpacity={0.28}
-            strokeWidth={0.35}
+            strokeOpacity={0.45}
+            strokeWidth={0.45}
             strokeLinejoin="round"
           />
 

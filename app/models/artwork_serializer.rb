@@ -34,7 +34,11 @@ class ArtworkSerializer
 
   def static_fallback
     return nil unless @artwork.image.attached?
-    filename = @artwork.image.blob&.filename.to_s
-    filename.present? ? "/images/#{filename}" : nil
+    if Rails.env.production?
+      rails_blob_path(@artwork.image, only_path: true)
+    else
+      filename = @artwork.image.blob&.filename.to_s
+      filename.present? ? "/images/#{filename}" : nil
+    end
   end
 end
