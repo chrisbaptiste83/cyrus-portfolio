@@ -49,7 +49,7 @@ class PagesController < ApplicationController
     message = params[:message]&.strip
 
     if [ name, email, message ].all?(&:present?) && email.match?(URI::MailTo::EMAIL_REGEXP)
-      ContactMailer.message(name: name, email: email, body: message).deliver_later
+      ContactMailer.contact_message(name: name, email: email, body: message).deliver_later
       redirect_to contact_path, notice: "¡Gracias! Tu mensaje ha sido enviado. Te responderé pronto."
     else
       redirect_to contact_path, alert: "Por favor completa todos los campos con información válida."
