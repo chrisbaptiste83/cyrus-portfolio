@@ -4,11 +4,11 @@ stages:
   - deploy
 
 variables:
-  PROJECT_ID: gcp-dev-sandbox-495101
-  REGION: us-central1
-  SERVICE: cyrus-portfolio-prod
-  IMAGE: us-central1-docker.pkg.dev/fornax-apps/cyrus-portfolio
-  RAILS_MASTER_KEY_SECRET: cyrus-portfolio-rails-master-key-prod
+  PROJECT_ID: trinitas-forge
+  REGION: us-west1
+  SERVICE: cyrus-portfolio
+  IMAGE: us-west1-docker.pkg.dev/trinitas-forge/app-images/cyrus-portfolio
+  RAILS_MASTER_KEY_SECRET: cyrus-portfolio-rails-master-key
 
 # ── Test ──────────────────────────────────────────────────────────────────────
 
@@ -58,7 +58,7 @@ build:
       --credential-source-file=/tmp/oidc-token
       --credential-source-type=text
     - gcloud auth login --cred-file=/tmp/cred-config.json
-    - gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+    - gcloud auth configure-docker us-west1-docker.pkg.dev --quiet
     - gcloud config set project $PROJECT_ID
     - gcloud secrets versions access latest --secret=${RAILS_MASTER_KEY_SECRET} > /tmp/rails_master_key
   script:
@@ -92,7 +92,18 @@ deploy:
         --region $REGION \
         --project $PROJECT_ID \
         --service-account cyrus-portfolio-service@${PROJECT_ID}.iam.gserviceaccount.com \
-        --set-secrets=RAILS_MASTER_KEY=${RAILS_MASTER_KEY_SECRET}:latest \
+        --vpc-connector run-to-vpc \
+        --vpc-egress private-ranges-only \
+        --port 80 \
+        --cpu 1 \
+        --memory 1Gi \
+        --no-cpu-throttling \
+        --cpu-boost \
+        --min-instances 1 \
+        --max-instances 20 \
+        --allow-unauthenticated \
+        --set-env-vars=RAILS_ENV=production,RAILS_LOG_LEVEL=info,SOLID_QUEUE_IN_PUMA=true,WEB_CONCURRENCY=1,RAILS_MAX_THREADS=10 \
+        --set-secrets=RAILS_MASTER_KEY=${RAILS_MASTER_KEY_SECRET}:latest,DATABASE_URL=cyrus-portfolio-database-url:latest,IMAGEKIT_ENDPOINT=cyrus-portfolio-imagekit-endpoint:latest,MUX_TOKEN_ID=cyrus-portfolio-mux-token-id:latest,MUX_TOKEN_SECRET=cyrus-portfolio-mux-secret-key:latest,MUX_WEBHOOK_SECRET=cyrus-portfolio-mux-webhook-secret:latest,SMTP_ADDRESS=cyrus-portfolio-smtp-address:latest,SMTP_USERNAME=cyrus-portfolio-smtp-username:latest,SMTP_PASSWORD=cyrus-portfolio-smtp-password:latest \
         --quiet
   environment:
     name: production

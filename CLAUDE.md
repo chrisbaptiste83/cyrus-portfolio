@@ -5,8 +5,8 @@ Rails 8.0.2 portfolio app for Cyrus Baptiste. Ruby 3.4.2. PostgreSQL (Cloud SQL)
 ## Stack
 
 - **Frontend**: React + Inertia.js (inertia_rails), esbuild (jsbundling-rails + cssbundling-rails), Tailwind v4 + DaisyUI v5
-- **Database**: PostgreSQL via Cloud SQL (private IP: 10.168.0.3, us-west2)
-- **Storage**: Active Storage → Google Cloud Storage (`cyrus-portfolio-prod-bucket`, us-west2) with Workload Identity (`iam: true`)
+- **Database**: PostgreSQL via Cloud SQL (private IP: 10.168.0.3, us-west1)
+- **Storage**: Active Storage → Google Cloud Storage (`cyrus-portfolio-prod-storage`, us-west1) with Workload Identity (`iam: true`)
 - **Media CDN**: ImageKit (`https://ik.imagekit.io/ja0efuulc`) — artwork images uploaded **directly to ImageKit** (not via GCS proxy)
 - **Video**: Mux (`mux_playback_id` → `https://stream.mux.com/{id}.m3u8`; thumbnail from `image.mux.com`)
 - **Background jobs**: Solid Queue
@@ -28,10 +28,10 @@ bin/rails db:migrate
 
 **Pipeline**: GitLab CI (`.gitlab-ci.yml`) — stages: test → build → deploy
 
-- **Image registry**: `us-west2-docker.pkg.dev/gcp-dev-sandbox-495101/app-images/cyrus-portfolio`
-- **Cloud Run service**: `cyrus-portfolio`, region `us-west2`, project `gcp-dev-sandbox-495101`
+- **Image registry**: `us-west1-docker.pkg.dev/trinitas-forge/app-images/cyrus-portfolio`
+- **Cloud Run service**: `cyrus-portfolio`, region `us-west1`, project `trinitas-forge`
 - **min-instances=1** — required; Cloud Run is behind a GCP Global Load Balancer whose backend timeout is 30s; cold starts take ~4 min and will cause 502s
-- **VPC connector**: `cyrus-portfolio-connector` — required for Cloud Run to reach Cloud SQL private IP
+- **VPC connector**: `run-to-vpc` — required for Cloud Run to reach Cloud SQL private IP
 - **Load balancer**: IP `34.107.171.159`, serving `www.cyrusbaptiste.com` via SSL cert (active through Aug 2026)
 - **Serverless NEG**: `cyrus-portfolio-neg` routes LB → Cloud Run
 

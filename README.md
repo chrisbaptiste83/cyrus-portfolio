@@ -21,7 +21,7 @@ This application serves as both a portfolio website and content management syste
 - Contact form with email delivery
 - Theme switcher (dark/light)
 - Admin dashboard for content management
-- Zero-downtime production deployment via Kamal 2
+- Zero-downtime production deployment to GCP Cloud Run via GitLab CI
 
 ---
 
@@ -55,7 +55,7 @@ This application serves as both a portfolio website and content management syste
 
 | | |
 |---|---|
-| Kamal 2 | Docker-based zero-downtime deployment |
+| GCP Cloud Run | Serverless container deployment via GitLab CI |
 | Thruster | HTTP/2 asset proxy |
 | Propshaft | Asset pipeline |
 | Let's Encrypt | Auto SSL via Kamal proxy |
