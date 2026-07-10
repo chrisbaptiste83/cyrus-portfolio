@@ -58,7 +58,7 @@ This application serves as both a portfolio website and content management syste
 | GCP Cloud Run | Serverless container deployment via GitLab CI |
 | Thruster | HTTP/2 asset proxy |
 | Propshaft | Asset pipeline |
-| Let's Encrypt | Auto SSL via Kamal proxy |
+| GCP Global Load Balancer | Managed SSL and traffic routing |
 | Cloudflare | CDN (Full SSL mode) |
 
 ---
@@ -107,7 +107,7 @@ The application runs at `http://localhost:3000`.
 |---|---|---|
 | `RAILS_MASTER_KEY` | Yes | Decrypts `config/credentials.yml.enc` |
 | `DATABASE_URL` | Production | Full PostgreSQL connection URL |
-| `KAMAL_REGISTRY_PASSWORD` | Deploy | Docker Hub access token |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | CI/CD | Workload Identity OIDC provider |
 | `SMTP_USERNAME` | Production | SMTP account username (Gmail address) |
 | `SMTP_PASSWORD` | Production | SMTP app password |
 | `POSTGRES_PASSWORD` | Production | PostgreSQL container password |
@@ -158,7 +158,7 @@ app/
         └── manifest.json.erb
 
 config/
-├── deploy.yml              # Kamal 2: server, registry, accessories, secrets
+├── .gitlab-ci.yml          # GitLab CI pipeline for GCP Cloud Run deployment
 ├── routes.rb
 └── environments/
     ├── production.rb       # SMTP config via env vars
@@ -213,32 +213,10 @@ Coverage reports output to `coverage/`.
 
 ## Deployment
 
-```bash
-bin/kamal setup    # first deploy — provisions server, starts containers
-bin/kamal deploy   # zero-downtime rolling deploy (runs db:migrate automatically)
-bin/kamal logs     # tail production logs
-bin/kamal console  # Rails console in production container
-bin/kamal shell    # bash in production container
-```
+Deployed exclusively to **GCP Cloud Run** (`trinitas-forge` project, `us-west1` region) via automated **GitLab CI** pipeline (`.gitlab-ci.yml`).
 
-### Production checklist
-
-Before first deploy:
-
-1. Add secrets to `.kamal/secrets`:
-   ```
-   KAMAL_REGISTRY_PASSWORD=...
-   RAILS_MASTER_KEY=...
-   DATABASE_URL=...
-   POSTGRES_PASSWORD=...
-   SMTP_USERNAME=...
-   SMTP_PASSWORD=...
-   ```
-2. Point DNS to the server IP (`172.236.254.205`)
-3. Set Cloudflare SSL mode to **Full**
-4. Run `bin/kamal setup`
-
-Subsequent deploys: `bin/kamal deploy`
+- Pushing to `main` triggers automated rspec testing, container image builds to Google Artifact Registry, and zero-downtime Cloud Run deployments (`min-instances=1`).
+- Serverless NEG and GCP Global Load Balancer serve `www.cyrusbaptiste.com` with managed SSL.
 
 ---
 
