@@ -376,7 +376,9 @@ export default function ArenaNegra({ artworks, gallery_media, gallery_info, inst
                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4">
-                        <p className="text-white text-sm font-medium">{showcaseItems[0].title}</p>
+                        {showcaseItems[0].type === 'artwork' && showcaseItems[0].title && !/\.(jpg|jpeg|png|mp4|mov|gif|webp)$/i.test(showcaseItems[0].title) && !/^(PXL_|IMG_|DSC_|image\d+|Arena Negra:\s*image)/i.test(showcaseItems[0].title) && (
+                          <p className="text-white text-sm font-medium">{showcaseItems[0].title}</p>
+                        )}
                         {showcaseItems[0].credit && <p className="text-white/60 text-xs">Por: {showcaseItems[0].credit}</p>}
                       </div>
                     </div>

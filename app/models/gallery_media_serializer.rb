@@ -9,7 +9,7 @@ class GalleryMediaSerializer
   def as_json
     {
       id:              @media.id,
-      title:           @media.title,
+      title:           clean_title(@media.title),
       description:     @media.description,
       category:        @media.category,
       media_type:      @media.media_type,
@@ -22,6 +22,13 @@ class GalleryMediaSerializer
   end
 
   private
+
+  def clean_title(title)
+    return nil if title.blank?
+    return nil if title =~ /\.(jpg|jpeg|png|mp4|mov|gif|webp)$/i
+    return nil if title =~ /^(PXL_|IMG_|DSC_|image\d+|Arena Negra:\s*image)/i
+    title
+  end
 
   def file_url
     return @media.imagekit_url if @media.respond_to?(:imagekit_url) && @media.imagekit_url.present?
