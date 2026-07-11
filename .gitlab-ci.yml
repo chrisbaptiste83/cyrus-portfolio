@@ -27,9 +27,11 @@ test:
     RAILS_ENV: test
     BUNDLE_WITHOUT: ""
   before_script:
-    - apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs git libyaml-dev libcurl4
+    - apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs npm git libyaml-dev libcurl4
     - gem install bundler --no-document
     - bundle install --jobs 4 --retry 3
+    - npm ci
+    - npm run build && npm run build:css
     - bundle exec rails db:schema:load
   script:
     - bundle exec rspec --format progress
