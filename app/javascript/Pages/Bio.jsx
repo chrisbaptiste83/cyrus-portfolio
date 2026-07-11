@@ -77,8 +77,8 @@ export default function Bio({ artist }) {
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Artist</p>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light">{artist.name}</h1>
-          <p className="mt-4 text-base-content/50 tracking-wide">Artist & Educator — Monterrey, México</p>
+          <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal">{artist.name}</h1>
+          <p className="font-space mt-4 text-xs sm:text-sm text-base-content/50 tracking-[0.25em] uppercase">Artist & Educator — Monterrey, México</p>
         </div>
       </section>
 
@@ -88,7 +88,7 @@ export default function Bio({ artist }) {
           <Reveal>
             <div className="grid lg:grid-cols-3 gap-12 lg:gap-20">
               <div className="lg:col-span-1">
-                <p className="text-xs tracking-[0.25em] uppercase text-base-content/40 mt-1">Declaración</p>
+                <p className="font-space text-xs tracking-[0.25em] uppercase text-base-content/40 mt-1">Declaración</p>
               </div>
               <div className="lg:col-span-2 space-y-6 text-base-content/70 leading-relaxed text-lg">
                 <p>{artist.bio}</p>
@@ -237,7 +237,7 @@ export default function Bio({ artist }) {
                   <div className="relative overflow-hidden border border-base-content/10" style={{ paddingBottom: '46%' }}>
                     <iframe
                       title="Arena Negra — Semillero Purísima, Monterrey"
-                      src="https://www.openstreetmap.org/export/embed.html?bbox=-100.3200%2C25.6720%2C-100.2974%2C25.6920&layer=mapnik&marker=25.6820%2C-100.3087"
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=-100.3301%2C25.6656%2C-100.3201%2C25.6756&layer=mapnik&marker=25.6706%2C-100.3251"
                       className="absolute inset-0 w-full h-full"
                       style={{ border: 0 }}
                       loading="lazy"

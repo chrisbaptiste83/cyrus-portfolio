@@ -25,29 +25,26 @@ artworks_data = [
 artworks_data.each do |data|
   image_file = data.delete(:image)
   artwork = Artwork.find_or_initialize_by(title: data[:title])
+  artwork.assign_attributes(data)
 
-  if artwork.new_record?
-    artwork.assign_attributes(data)
-    image_path = Rails.root.join("public", "images", image_file)
-    if File.exist?(image_path)
+  image_path = Rails.root.join("public", "images", image_file)
+  if File.exist?(image_path)
+    unless artwork.image.attached?
       artwork.image.attach(io: File.open(image_path), filename: image_file)
-      artwork.save!
-      puts "Created artwork: #{artwork.title}"
-    else
-      puts "Image not found: #{image_path}"
     end
+    artwork.save!
+    puts "#{artwork.new_record? ? 'Created' : 'Updated'} artwork: #{artwork.title}"
   else
-    puts "Artwork already exists: #{artwork.title}"
+    puts "Image not found: #{image_path}"
   end
 end
 
-# Seed Arena Negra gallery media from the project folder
-# These are the actual Arena Negra photos/videos, not artwork images
-arena_negra_folder = Rails.root.join("..", "Arena Negra Gallery Images and Videos")
+# Seed Arena Negra gallery media from configurable path
+downloads_folder = Pathname.new(ENV.fetch("SEED_MEDIA_PATH", Rails.root.join("storage", "seed_media")))
 
-if arena_negra_folder.exist?
-  images = Dir[arena_negra_folder.join("PHOTO-*.jpg")].sort
-  videos = Dir[arena_negra_folder.join("VIDEO-*.mp4")].sort
+if downloads_folder.exist?
+  images = Dir[downloads_folder.join("PHOTO-*.jpg")].sort
+  videos = Dir[downloads_folder.join("VIDEO-*.mp4")].sort
 
   images.each_with_index do |path, index|
     filename = File.basename(path)
@@ -85,8 +82,23 @@ if arena_negra_folder.exist?
     end
   end
 else
-  puts "Arena Negra folder not found at #{arena_negra_folder} — skipping gallery media seed"
-  puts "Upload Arena Negra media via the admin panel at /admin"
+  puts "Downloads folder not found — seeding GalleryMedia from public/images fallback..."
+  categories = GalleryMedia.categories.keys
+  Dir[Rails.root.join("public", "images", "*.*")].sort.each_with_index do |path, index|
+    filename = File.basename(path)
+    media = GalleryMedia.find_or_initialize_by(title: "Arena Negra: #{filename}")
+    if media.new_record?
+      media.assign_attributes(
+        description: "Obra y actividad en el espacio Arena Negra",
+        category: categories[index % categories.length],
+        media_type: :image,
+        position: index + 1
+      )
+      media.file.attach(io: File.open(path), filename: filename)
+      media.save!
+      puts "Seeded Arena Negra fallback media: #{filename} (#{media.category})"
+    end
+  end
 end
 
 puts "Seeding complete!"

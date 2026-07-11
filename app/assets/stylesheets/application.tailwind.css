@@ -1,6 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bebas Neue", ui-sans-serif, system-ui, sans-serif;
+  --font-body: Jost, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Cinzel, Georgia, serif;
+  --font-syne: Syne, ui-sans-serif, system-ui, sans-serif;
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-space: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+@plugin "daisyui" {
+  themes: black, lofi;
+}
+
+@layer base {
+  body {
+    font-family: 'Jost', ui-sans-serif, system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', Georgia, serif;
+    letter-spacing: 0.02em;
+  }
+}
 
 @layer utilities {
   .animate-marquee {

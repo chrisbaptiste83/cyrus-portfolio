@@ -3,6 +3,14 @@
   <head>
     <title><%= content_for(:title) || "Cyrus Baptiste - Artist & Educator" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%# Apply saved theme before first paint to prevent flash %>
+    <script>
+      (function(){
+        var t = localStorage.getItem("theme");
+        if (t === "light") t = "lofi";
+        document.documentElement.setAttribute("data-theme", t || "black");
+      })();
+    </script>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -26,6 +34,11 @@
     <meta name="twitter:title" content="<%= content_for(:title) || 'Cyrus Baptiste - Artist & Educator' %>">
     <meta name="twitter:description" content="<%= content_for(:description) || 'Artist and educator based in Monterrey, Mexico. Exploring identity, race, and tolerance through vibrant colors and bold forms.' %>">
     <meta name="twitter:image" content="https://cyrusbaptiste.com/images/image1.jpeg">
+
+    <%# Typography — Bebas Neue (display) + Jost (body) %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>

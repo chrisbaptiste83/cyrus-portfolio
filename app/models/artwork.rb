@@ -1,5 +1,5 @@
 class Artwork < ApplicationRecord
-  has_one_attached :image
+  has_one_attached :image, dependent: :purge_later
 
   validates :title, presence: true
   validates :image, presence: true

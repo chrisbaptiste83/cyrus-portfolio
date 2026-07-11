@@ -28,8 +28,8 @@ export default function Contact() {
 
       {/* Header */}
       <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24 text-center">
-        <p className="text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase text-base-content/40 mb-3 sm:mb-4">Get in touch</p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light mb-6">Contact</h1>
+        <p className="font-space text-xs sm:text-sm tracking-[0.25em] uppercase text-base-content/40 mb-3 sm:mb-4">Get in touch</p>
+        <h1 className="font-cormorant text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal mb-6">Contact</h1>
         <p className="text-base-content/60 max-w-md mx-auto">
           Interested in a piece, a collaboration, or an art class at Arena Negra? Send a message.
         </p>

@@ -1,0 +1,6 @@
+[allowlist]
+  description = "Allowlist for encrypted Rails credentials files"
+  paths = [
+    '''config/credentials/.*\.enc$''',
+    '''config/credentials\.yml\.enc$''',
+  ]
